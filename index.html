@@ -75,11 +75,11 @@ nav.main{display:flex;gap:clamp(18px,2.6vw,40px);font-size:14px;font-weight:400}
 .menu .mono{margin-top:24px;font-size:13px;color:var(--dkm)}
 .hd-r .sq{cursor:pointer}
 
-header.top::before{content:'';position:absolute;left:0;right:0;top:0;height:104px;background:linear-gradient(var(--bg) 48%,transparent);z-index:-1;opacity:0;transition:opacity .35s}
+header.top::before{content:'';position:absolute;left:0;right:0;top:0;bottom:0;background:rgba(242,242,240,.6);backdrop-filter:blur(16px) saturate(160%);-webkit-backdrop-filter:blur(16px) saturate(160%);border-bottom:1px solid rgba(22,25,27,.08);z-index:-1;opacity:0;transition:opacity .35s,background .35s,border-color .35s}
 .scrolled header.top::before{opacity:1}
-.inv-top header.top::before{background:linear-gradient(var(--dk) 48%,transparent)}
+.inv-top header.top::before{background:rgba(22,25,27,.55);border-bottom-color:rgba(239,239,237,.1)}
 .menu-open header.top{color:var(--dki)}
-.menu-open header.top::before{opacity:1;background:linear-gradient(var(--dk) 48%,transparent)}
+.menu-open header.top::before{opacity:1;background:rgba(22,25,27,.55);border-bottom-color:rgba(239,239,237,.1)}
 /* ---------- мобильная панель звонка ---------- */
 .mbar{display:none}
 @media(max-width:700px){
