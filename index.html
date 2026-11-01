@@ -504,7 +504,8 @@ var PH={"geroi": "UklGRvCWAABXRUJQVlA4IOSWAADwegKdASr4AjoCPok8mkolIyipJTS72SARCW
   $('#mq').innerHTML=(function(){var h=EVENTS.map(function(e,i){var ph=e[3]&&PH[e[3]];return '<a class="ev'+(ph?' ph':'')+'" href="#">'+(ph?'<img alt="" loading="lazy" src="data:image/webp;base64,'+PH[e[3]]+'">':'')+'<div class="tp"><span>'+e[1]+'</span>'+(i===0?'<em>ближайшее</em>':'')+'</div><div class="bt"><b>'+e[2]+'</b><div class="d mono-num">'+e[0]+'</div></div></a>'}).join('');return h+h})();
 
   /* ---------- плашка отключений: показывается, только если есть тревога ---------- */
-  var al=ZHK.filter(function(z){return z.al})[0],alertEl=$('#alert');
+  var SHOW_ALERT=false; /* временно скрыто по просьбе клиента — чтобы вернуть, поставь true */
+  var al=SHOW_ALERT&&ZHK.filter(function(z){return z.al})[0],alertEl=$('#alert');
   if(al){alertEl.hidden=false;root.classList.add('has-alert');
     alertEl.innerHTML='<b>ЖК «'+al.n+'»</b><span>'+al.al+'</span><a href="#zhk-'+al.id+'">Подробнее</a><button aria-label="Скрыть">×</button>';
     alertEl.querySelector('button').addEventListener('click',function(){alertEl.hidden=true;root.classList.remove('has-alert')});}
