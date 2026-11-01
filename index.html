@@ -70,12 +70,21 @@ nav.main{display:flex;gap:clamp(18px,2.6vw,40px);font-size:14px;font-weight:400}
 .menu-open .hd-r .sq::after{opacity:1}
 @media(max-width:900px){nav.main{display:none}}
 .menu-open nav.main{display:none}
+.menu-open .logo{opacity:0;pointer-events:none}
+.menu-open .hd-r .ph{visibility:hidden}
 @media(max-width:520px){.hd-r .ph{display:none}.lg{height:28px}}
 .menu{position:fixed;inset:0;z-index:58;background:var(--dk);color:var(--dki);display:none;flex-direction:column;justify-content:center;gap:6px;padding:0 var(--gx) 48px}
 .menu.open{display:flex}.menu a{font-size:clamp(40px,12vw,84px);letter-spacing:-.05em;line-height:1.05;font-weight:300}
 .menu-foot{margin-top:auto;padding-top:28px;border-top:1px solid var(--dkl);display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
 .menu-tel{font-size:clamp(20px,2.4vw,26px);font-weight:500;letter-spacing:-.01em}
 .menu-sub{font-size:13px;color:var(--dkm)}
+.menu-scrim{position:fixed;inset:0;z-index:57;background:rgba(14,16,17,.5);opacity:0;pointer-events:none;transition:opacity .4s}
+.menu-scrim.show{opacity:1;pointer-events:auto}
+@media(min-width:901px){
+  .menu{display:flex;inset:auto;top:0;right:0;bottom:0;left:auto;width:30vw;min-width:380px;max-width:560px;padding:140px 48px 48px;justify-content:flex-start;transform:translateX(100%);visibility:hidden;box-shadow:-60px 0 100px rgba(0,0,0,.35);transition:transform .5s cubic-bezier(.16,1,.3,1),visibility 0s .5s linear}
+  .menu.open{transform:translateX(0);visibility:visible;transition:transform .5s cubic-bezier(.16,1,.3,1)}
+  .menu a{font-size:clamp(32px,3.4vw,52px)}
+}
 .hd-r .sq{cursor:pointer}
 
 header.top::before{content:'';position:absolute;left:0;right:0;top:0;bottom:0;background:rgba(22,25,27,.55);backdrop-filter:blur(16px) saturate(160%);-webkit-backdrop-filter:blur(16px) saturate(160%);border-bottom:1px solid rgba(239,239,237,.1);z-index:-1;opacity:0;transition:opacity .35s}
@@ -349,6 +358,7 @@ h2.display,h3{text-wrap:balance}
     </nav>
     <div class="hd-r"><a class="ph mono" href="tel:+78442000000">+7 (8442) 00-00-00</a><button class="sq" id="mbtn" aria-label="Меню"><i></i></button></div>
   </header>
+  <div class="menu-scrim" id="menuScrim"></div>
   <div class="menu" id="menu">
     <a href="#objects">Объекты</a><a href="#events">Мероприятия</a><a href="#docs">Документы</a><a href="#about">О компании</a><a href="#contacts">Контакты</a>
     <div class="menu-foot">
@@ -520,9 +530,11 @@ var PH={"geroi": "UklGRvCWAABXRUJQVlA4IOSWAADwegKdASr4AjoCPok8mkolIyipJTS72SARCW
   var names=['дом работает','двор','кровля и фасад','подъезды','инженерия','подвал'];
 
   /* ---------- меню ---------- */
-  var menu=$('#menu'),mb=$('#mbtn');
-  mb.addEventListener('click',function(){var isOpen=menu.classList.toggle('open');root.classList.toggle('menu-open',isOpen)});
-  $$('a',menu).forEach(function(a){a.addEventListener('click',function(){menu.classList.remove('open');root.classList.remove('menu-open')})});
+  var menu=$('#menu'),mb=$('#mbtn'),scrim=$('#menuScrim');
+  function closeMenu(){menu.classList.remove('open');root.classList.remove('menu-open');scrim.classList.remove('show')}
+  mb.addEventListener('click',function(){var isOpen=menu.classList.toggle('open');root.classList.toggle('menu-open',isOpen);scrim.classList.toggle('show',isOpen)});
+  scrim.addEventListener('click',closeMenu);
+  $$('a',menu).forEach(function(a){a.addEventListener('click',closeMenu)});
 
   if(!window.gsap||!window.ScrollTrigger){return}
   gsap.registerPlugin(ScrollTrigger);
