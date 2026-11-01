@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Прототип сайта УК</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>
+:root{
+  --bg:#FFFFFF;--bg2:#F4F4F2;--ink:#1C1F21;--mut:#6E7376;--line:#D9D9D6;--ph:#E9E9E6;--ph2:#DEDEDB;
+  --note:#FFF6D6;--note-b:#E8D48A;--note-ink:#5A4B12;
+  --ok:#3E7C5A;--warn:#C98A00;--plan:#4A6FA5;
+  --chrome:#1C1F21;--chrome-ink:#F2F2F0;
+  --gx:max(16px,env(safe-area-inset-left),env(safe-area-inset-right));
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#141617;--bg2:#1C1F21;--ink:#ECECEA;--mut:#9DA2A5;--line:#33373A;--ph:#25292B;--ph2:#2E3235;
+  --note:#2E2A1A;--note-b:#5E5124;--note-ink:#E8D9A0;--chrome:#0B0C0D;}}
+:root[data-theme="dark"]{--bg:#141617;--bg2:#1C1F21;--ink:#ECECEA;--mut:#9DA2A5;--line:#33373A;--ph:#25292B;--ph2:#2E3235;--note:#2E2A1A;--note-b:#5E5124;--note-ink:#E8D9A0;--chrome:#0B0C0D}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+button,select{font:inherit;color:inherit}
+.c{max-width:1200px;margin:0 auto;padding:0 var(--gx)}
+h1{font-size:clamp(26px,3.7vw,44px);line-height:1.08;letter-spacing:-.02em;font-weight:600}
+h2{font-size:clamp(22px,2.8vw,32px);line-height:1.15;letter-spacing:-.015em;font-weight:600}
+h3{font-size:18px;line-height:1.25;font-weight:600}
+.mut{color:var(--mut)}.sm{font-size:13px}.xs{font-size:12px}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}.g3{grid-template-columns:repeat(3,minmax(0,1fr))}.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media(max-width:900px){.g3,.g4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.g2,.g3,.g4{grid-template-columns:minmax(0,1fr)}}
+
+/* --- оболочка прототипа (не часть сайта) --- */
+.chrome{position:sticky;top:0;z-index:80;background:var(--chrome);color:var(--chrome-ink);font-size:12px}
+.chrome .c{display:flex;gap:10px;align-items:center;min-height:40px;flex-wrap:wrap;padding-top:6px;padding-bottom:6px}
+.chrome b{font-weight:600;letter-spacing:.02em}
+.chrome select,.chrome button{background:#2C3033;color:#F2F2F0;border:0;border-radius:4px;padding:5px 9px;font-size:12px;cursor:pointer}
+.chrome .sp{flex:1}
+.chrome .tag{opacity:.7}
+
+/* --- элементы вайрфрейма --- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 18px;border:1.5px solid var(--ink);background:var(--ink);color:var(--bg);text-decoration:none;font-weight:600;font-size:14px;border-radius:6px;cursor:pointer;white-space:nowrap}
+.btn.o{background:transparent;color:var(--ink)}
+.btn.s{min-height:36px;padding:0 12px;font-size:13px}
+.ph{background:var(--ph) repeating-linear-gradient(135deg,transparent 0 10px,var(--ph2) 10px 11px);border:1px solid var(--line);display:grid;place-items:center;color:var(--mut);font-size:12px;text-align:center;padding:8px;border-radius:6px}
+.box{border:1px solid var(--line);border-radius:8px;padding:18px;background:var(--bg)}
+.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:5px 11px;font-size:13px;background:var(--bg);cursor:pointer;white-space:nowrap}
+.chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.st{display:inline-flex;align-items:center;gap:7px;font-size:13px}
+.st i{width:8px;height:8px;border-radius:50%;flex:none;background:var(--ok)}
+.st.warn i{background:var(--warn)}.st.plan i{background:var(--plan)}
+.tel{font-weight:700;white-space:nowrap;text-decoration:none}
+.crumbs{font-size:13px;color:var(--mut);margin-bottom:14px}.crumbs a{color:var(--mut)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:12px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;color:var(--mut);font-weight:500}
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch}
+details{border-bottom:1px solid var(--line)}details summary{cursor:pointer;padding:14px 0;font-weight:600;list-style:none}
+details summary::after{content:'+';float:right;color:var(--mut)}details[open] summary::after{content:'–'}
+details p{padding:0 0 14px;color:var(--mut);font-size:14px;max-width:70ch}
+select.f{border:1px solid var(--line);border-radius:6px;padding:8px 10px;background:var(--bg);min-height:40px}
+
+/* --- блоки и пояснения --- */
+.blk{position:relative;padding:44px 0;border-bottom:1px dashed var(--line)}
+.blk.alt{background:var(--bg2)}
+.bid{display:block;margin-bottom:14px;font:600 11px/1 ui-monospace,Menlo,monospace;color:var(--mut);letter-spacing:.04em;text-transform:uppercase}
+.note{margin-top:22px;background:var(--note);border:1px solid var(--note-b);color:var(--note-ink);border-radius:8px;padding:12px 14px;font-size:13px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.note b{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;opacity:.75}
+.note .new{grid-column:1/-1;font-weight:600}
+@media(max-width:700px){.note{grid-template-columns:minmax(0,1fr)}}
+.notes-off .note{display:none}
+
+/* --- шапка сайта --- */
+.alert{background:var(--warn);color:#1C1F21;font-size:14px}
+.alert .c{display:flex;gap:10px;align-items:center;min-height:42px;flex-wrap:wrap;padding-top:6px;padding-bottom:6px}
+.alert a{font-weight:600}
+.hdr{border-bottom:1px solid var(--line);background:var(--bg)}
+.hdr .c{display:flex;align-items:center;gap:22px;min-height:68px}
+.logo{width:150px;height:36px;font-size:11px;flex:none}
+.nav{display:flex;gap:20px;font-size:14px;flex:1}
+.nav a{text-decoration:none}.nav a.cur{text-decoration:underline;text-underline-offset:6px}
+.hdr .ads{display:flex;flex-direction:column;align-items:flex-end;line-height:1.15}
+.burger{display:none;width:44px;height:44px;border:1px solid var(--line);border-radius:6px;background:var(--bg)}
+@media(max-width:980px){.nav{display:none}.burger{display:block}.hdr .ads .xs{display:none}.hdr .c{gap:12px;justify-content:space-between}}
+@media(max-width:520px){.hdr .ads{display:none}}
+.mnav{display:none;border-bottom:1px solid var(--line);padding:8px 0}
+.mnav.open{display:block}.mnav a{display:block;padding:12px var(--gx);text-decoration:none;font-weight:600}
+.mbar{display:none}
+@media(max-width:700px){
+  .mbar{display:grid;grid-template-columns:1.4fr 1fr;gap:8px;position:fixed;left:0;right:0;bottom:0;z-index:70;padding:10px var(--gx) max(10px,env(safe-area-inset-bottom));background:var(--bg);border-top:1px solid var(--line)}
+  body{padding-bottom:76px}
+}
+.ftr{background:var(--bg2);padding:40px 0 30px;font-size:14px}
+.ftr .grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media(max-width:800px){.ftr .grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+
+/* --- страницы --- */
+.hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:28px;align-items:stretch}
+@media(max-width:860px){.hero{grid-template-columns:minmax(0,1fr)}.hero .ads-card{order:-1}}
+.ads-card{border:2px solid var(--ink);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:8px}
+.ads-card .tel{font-size:clamp(24px,3vw,32px)}
+.picker{display:flex;gap:8px;flex-wrap:wrap}
+.picker select{flex:1;min-width:200px}
+.zcard{display:flex;flex-direction:column;gap:10px;text-decoration:none}
+.zcard .ph{aspect-ratio:16/10}
+.today{display:grid;grid-template-columns:minmax(0,1fr);border-top:1px solid var(--line)}
+.today a{display:grid;grid-template-columns:minmax(140px,220px) minmax(0,1fr) auto;gap:14px;padding:13px 0;border-bottom:1px solid var(--line);text-decoration:none;align-items:center}
+@media(max-width:600px){.today a{grid-template-columns:minmax(0,1fr) auto;gap:6px 12px}.today a>b{grid-row:1}.today a>span:last-child{grid-row:1;grid-column:2}.today a .st{grid-column:1/-1;grid-row:2}}
+.doc{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center;padding:14px 0;border-bottom:1px solid var(--line)}
+.doc .ic{width:38px;height:46px;font-size:10px;padding:0}
+.ev .ph{aspect-ratio:4/3}
+.ev{text-decoration:none;display:flex;flex-direction:column;gap:8px}
+.anchors{display:flex;gap:8px;overflow-x:auto;padding:12px 0;position:sticky;top:var(--chr,40px);background:var(--bg);z-index:5;border-bottom:1px solid var(--line);scrollbar-width:none}
+.steps{counter-reset:s}.steps li{list-style:none;display:grid;grid-template-columns:34px minmax(0,1fr);gap:10px;padding:12px 0;border-bottom:1px solid var(--line)}
+.steps li::before{counter-increment:s;content:counter(s);width:28px;height:28px;border:1.5px solid var(--ink);border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:600}
+.check li{list-style:none;display:flex;gap:10px;align-items:baseline;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px}
+.check .y{color:var(--ok);font-weight:700}.check .n{color:var(--warn);font-weight:700}
+.prose p{margin-bottom:12px;max-width:68ch}
+.pri{display:inline-block;font:600 10px/1 ui-monospace,monospace;padding:4px 6px;border-radius:3px;border:1px solid currentColor;margin-right:6px;vertical-align:2px}
+.pri.m{color:var(--ok)}.pri.s{color:var(--plan)}.pri.c{color:var(--mut)}
+.empty{padding:26px;text-align:center;color:var(--mut);border:1px dashed var(--line);border-radius:8px}
+</style>
+</head>
+<body>
+<div class="chrome"><div class="c">
+  <b>ПРОТОТИП · УК «Современный город»</b><span class="tag">без дизайна, данные — примеры</span>
+  <span class="sp"></span>
+  <label>Страница <select id="pg"></select></label>
+  <button id="nt">Пояснения: вкл</button>
+</div></div>
+
+<div id="site">
+  <div class="alert" id="alert"></div>
+  <header class="hdr"><div class="c">
+    <a href="#home" class="ph logo">логотип</a>
+    <nav class="nav" id="nav"></nav>
+    <div class="ads"><span class="xs mut">Диспетчерская 24/7</span><a class="tel" href="tel:+78442000000">+7 (8442) 00-00-00</a></div>
+    <button class="burger" id="bg" aria-label="Меню">☰</button>
+  </div></header>
+  <div class="mnav" id="mnav"></div>
+  <main id="main"></main>
+  <footer class="ftr"><div class="c">
+    <div class="grid">
+      <div><div class="ph logo" style="margin-bottom:12px">логотип</div><div class="sm mut">Управляющая компания жилых комплексов в Волгограде</div></div>
+      <div><div class="xs mut">Диспетчерская 24/7</div><a class="tel" href="tel:+78442000000">+7 (8442) 00-00-00</a><div class="xs mut" style="margin-top:10px">Офис</div><div class="sm">Пн–Пт 08:00–17:00<br>адрес офиса — уточнить</div></div>
+      <div class="sm" style="display:flex;flex-direction:column;gap:6px"><a href="#objects">Объекты</a><a href="#events">Мероприятия</a><a href="#docs">Документы</a><a href="#about">О компании</a><a href="#contacts">Контакты</a></div>
+      <div class="sm" style="display:flex;flex-direction:column;gap:6px"><span class="mut xs">Раскрытие информации</span><a href="#docs">Документы домов</a><a href="#about">Лицензия и реквизиты</a><span>Страница УК в ГИС ЖКХ ↗</span><span>Политика конфиденциальности</span></div>
+    </div>
+    <div class="xs mut" style="margin-top:28px">© 2026 ООО «Современный город» · ИНН — · ОГРН — · лицензия № — (уточнить)</div>
+  </div></footer>
+  <div class="mbar"><a class="btn" href="tel:+78442000000">Позвонить в диспетчерскую</a><a class="btn o" href="#objects">Мой дом</a></div>
+</div>
+
+<script>
+(function(){
+  /* ================= ДАННЫЕ (примеры) ================= */
+  /* Реестр домов на 15.10.2026. Управляющие, телефоны и даты — примеры */
+  var ZHK=[
+    {id:'geroi',name:'Герои поколений',title:'ЖК «Герои поколений»',a:[['ул. им. Землячки',['84','84/1','84/2','84/3','84/4','84/5','84/6','84/7','84/8','84/9','84/10']]],mgr:'Мария Иванова',tel:'+7 (8442) 00-00-11',flush:'12 июля',pass:'18 сентября'},
+    {id:'novy',name:'Новый',title:'ЖК «Новый»',a:[['ул. Тракторостроителей',['21','21/1','21/2','21/3','27','27/1','27/2','27/3','29','29/1']]],mgr:'Алексей Петров',tel:'+7 (8442) 00-00-12',flush:'26 июня',pass:'16 сентября'},
+    {id:'semeyny',name:'Семейный',title:'ЖК «Семейный»',a:[['пос. Стройдеталь',['1','3','5','7','9']],['пр-кт Университетский',['42','44','44а']]],mgr:'Ольга Смирнова',tel:'+7 (8442) 00-00-13',flush:'3 июля',pass:'19 сентября'},
+    {id:'severny',name:'Северный',title:'ЖК «Северный»',a:[['ул. им. Поддубного',['2','4']],['ул. Северный городок',['4']],['ул. Созидательская',['14']]],mgr:'Игорь Козлов',tel:'+7 (8442) 00-00-14',flush:'19 июня',pass:'15 сентября'},
+    {id:'bereg',name:'Берег Волги',title:'ЖК «Берег Волги»',a:[['ул. им. Степана Разина',['25/1','25/2','27','27/1']]],mgr:'Елена Морозова',tel:'+7 (8442) 00-00-15',flush:'8 июля',pass:'17 сентября'},
+    {id:'zenit',name:'Зенит',title:'ЖК «Зенит»',a:[['ул. Таращанцева',['83','85']]],mgr:'Дмитрий Волков',tel:'+7 (8442) 00-00-16',flush:'15 июля',pass:null},
+    {id:'granat',name:'Гранат',title:'ЖК «Гранат»',a:[['ул. Промышленная',['4','6']]],mgr:'Анна Кузнецова',tel:'+7 (8442) 00-00-17',flush:'1 июля',pass:'18 сентября'},
+    {id:'tarifnaya',name:'Тарифная',title:'ЖК «Тарифная»',a:[['ул. Тарифная',['15']]],mgr:'Сергей Новиков',tel:'+7 (8442) 00-00-18',flush:'24 июня',pass:'16 сентября'},
+    {id:'gvard35',name:'на 35-й Гвардейской',title:'ЖК на 35-й Гвардейской',a:[['ул. 35-й Гвардейской',['19']]],mgr:'Сергей Новиков',tel:'+7 (8442) 00-00-18',flush:'24 июня',pass:'16 сентября'},
+    {id:'atlasova',name:'Атласова',title:'ЖК «Атласова»',a:[['ул. Атласова',['12']]],mgr:'Анна Кузнецова',tel:'+7 (8442) 00-00-17',flush:'1 июля',pass:'17 сентября'},
+    {id:'other',name:'Отдельные дома',title:'Отдельные дома',solo:true,a:[['ул. Коммунистическая',['5А']],['ул. Таращанцева',['87','89']]],mgr:'Дмитрий Волков',tel:'+7 (8442) 00-00-16',flush:'15 июля',pass:'19 сентября'}
+  ];
+  ZHK.forEach(function(z){z.n=z.a.reduce(function(s,x){return s+x[1].length},0);z.addr=z.a.map(function(x){return x[0]}).join(' · ')});
+  var TOTAL=ZHK.reduce(function(s,z){return s+z.n},0),NZHK=ZHK.filter(function(z){return !z.solo}).length;
+  var READY=ZHK.reduce(function(s,z){return s+(z.pass?z.n:0)},0);
+  function hn(n){var m=n%10,h=n%100;return n+' '+(m===1&&h!==11?'дом':(m>=2&&m<=4&&(h<10||h>=20))?'дома':'домов')}
+  function addrList(z){return z.a.map(function(x){return x[0]+', д. '+x[1].join(', ')}).join('<br>')}
+  var ADDR=[];ZHK.forEach(function(z){z.a.forEach(function(x){x[1].forEach(function(n){ADDR.push({s:x[0]+', '+n,z:z.id})})})});
+  function norm(t){return t.toLowerCase().replace(/ё/g,'е').replace(/[.,]/g,' ').replace(/(^|\s)(ул|улица|пр-кт|проспект|пос|им|д|дом)(?=\s)/g,' ').replace(/\s+/g,' ').trim()}
+  function findAddr(q){q=norm(q);if(!q)return null;var hit=null;ADDR.forEach(function(a){if(!hit&&norm(a.s)===q)hit=a});if(hit)return hit;
+    var parts=q.split(' ');ADDR.forEach(function(a){var tk=norm(a.s).split(' ');if(!hit&&parts.every(function(p){return /\d/.test(p)?tk.indexOf(p)>-1:tk.some(function(t){return t.indexOf(p)===0})}))hit=a});return hit}
+  var NOTICES=[
+    {z:'novy',t:'warn',d:'Сегодня',x:'Тракторостроителей, 27/2: с 09:00 до 17:00 нет горячей воды. Меняем задвижку в тепловом узле. Холодная вода и отопление работают.'},
+    {z:'geroi',t:'plan',d:'2 ноября',x:'С 10:00 до 13:00 плановый осмотр лифтов. Лифты отключают по очереди, в каждом подъезде один работает.'},
+    {z:'severny',t:'plan',d:'5 ноября',x:'Поддубного, 2: промывка мусоропровода. Мусорокамера закрыта с 09:00 до 12:00.'}
+  ];
+  var EVENTS=[
+    {id:'e1',z:'semeyny',title:'Осенний субботник: высадили 40 кустарников',date:'4 октября 2026',y:2026,photo:24,video:0},
+    {id:'e2',z:'geroi',title:'Праздник двора',date:'14 сентября 2026',y:2026,photo:40,video:1},
+    {id:'e3',z:'severny',title:'Встреча с жителями о подготовке к зиме',date:'27 августа 2026',y:2026,photo:12,video:0},
+    {id:'e4',z:'bereg',title:'Открыли новую детскую площадку',date:'15 июля 2026',y:2026,photo:18,video:0},
+    {id:'e5',z:'novy',title:'День соседей во дворе',date:'31 мая 2026',y:2026,photo:22,video:1},
+    {id:'e6',z:'geroi',title:'Новый год во дворе',date:'28 декабря 2025',y:2025,photo:36,video:1}
+  ];
+  var UPCOMING=[
+    {z:'zenit',title:'Мастер-класс по ёлочным игрушкам для детей',date:'14 декабря, 12:00',place:'Лобби, корпус 1'},
+    {z:null,title:'Новогодний праздник во дворах всех ЖК',date:'27 декабря, 15:00',place:'Дворы ЖК — по графику'}
+  ];
+  var DT={report:'Годовой отчёт',flush:'Промывка и опрессовка',plan:'График подготовки к сезону',pass:'Паспорт готовности'};
+  function docsFor(z){
+    var d=[
+      {t:'report',title:'Отчёт управляющей компании за 2025 год',sub:'Единая форма Минстроя, обязательна с 01.03.2026',date:'1 марта 2026',y:2026,size:'1,2 МБ'},
+      {t:'report',title:'Отчёт управляющей компании за 2024 год',sub:'',date:'28 марта 2025',y:2025,size:'0,9 МБ'},
+      {t:'flush',title:'Акт гидропромывки системы отопления',sub:'Все дома комплекса',date:z.flush+' 2026',y:2026,size:'480 КБ'},
+      {t:'flush',title:'Акт гидравлических испытаний (опрессовки)',sub:'Все дома комплекса',date:z.flush+' 2026',y:2026,size:'510 КБ'}
+    ];
+    if(z.pass)d.push({t:'pass',title:'Паспорт готовности к отопительному периоду 2026/27',sub:'Выдан комиссией',date:z.pass+' 2026',y:2026,size:'260 КБ'});
+    return d.map(function(x){x.z=z;return x});
+  }
+  var COMPANY_DOCS=[
+    {t:'plan',title:'График подготовки к отопительному периоду 2026/27',sub:'Сроки работ по каждому ЖК',date:'20 мая 2026',y:2026,size:'310 КБ'},
+    {t:'co',title:'Лицензия на управление многоквартирными домами',sub:'',date:'—',y:2026,size:'—'},
+    {t:'co',title:'Образец договора управления',sub:'',date:'—',y:2026,size:'—'}
+  ];
+
+  /* ================= ПОМОЩНИКИ ================= */
+  var $=function(s,c){return (c||document).querySelector(s)};
+  function byId(id){for(var i=0;i<ZHK.length;i++)if(ZHK[i].id===id)return ZHK[i];return null}
+  function tel(t){return 'tel:'+t.replace(/[^\d+]/g,'')}
+  function esc(s){return String(s)}
+  function blk(id,title,inner,note,alt){
+    return '<section class="blk'+(alt?' alt':'')+'"><div class="c" style="position:relative"><span class="bid">'+id+' · '+title+'</span><div>'+inner+'</div>'+(note?noteHtml(note):'')+'</div></section>';
+  }
+  function noteHtml(n){
+    return '<div class="note">'+(n.n?'<div class="new">＋ Нет в ТЗ, предлагаем: '+n.n+'</div>':'')+'<div><b>Зачем</b>'+n.w+'</div><div><b>Контент</b>'+n.c+'</div><div><b>Тильда</b>'+n.t+'</div></div>';
+  }
+  function stOf(z){
+    var n=NOTICES.filter(function(x){return x.z===z.id});
+    if(!n.length)return '<span class="st"><i></i>Всё работает штатно</span>';
+    var w=n.filter(function(x){return x.t==='warn'})[0];
+    if(w)return '<span class="st warn"><i></i>'+w.d+': '+w.x.split('.')[0]+'</span>';
+    return '<span class="st plan"><i></i>'+n[0].d+': плановые работы</span>';
+  }
+  function docRow(d,showZ){
+    return '<div class="doc"><div class="ph ic">PDF</div><div><div style="font-weight:600">'+d.title+'</div><div class="xs mut">'+(showZ&&d.z?d.z.title+' · ':'')+(DT[d.t]||'Документы компании')+(d.sub?' · '+d.sub:'')+' · '+d.date+' · '+d.size+'</div></div><a class="btn o s" href="#docs">Скачать</a></div>';
+  }
+  function evCard(e){
+    var z=byId(e.z);
+    return '<a class="ev" href="#'+e.id+'"><div class="ph">обложка: фото с мероприятия</div><div class="xs mut">'+e.date+' · '+z.title+'</div><h3>'+e.title+'</h3><div class="xs mut">'+e.photo+' фото'+(e.video?' · '+e.video+' видео':'')+'</div></a>';
+  }
+  function zSelect(id,cur,all){
+    return '<select class="f" id="'+id+'">'+(all?'<option value="">Все ЖК</option>':'<option value="">Выберите ваш ЖК</option>')+ZHK.map(function(z){return '<option value="'+z.id+'"'+(cur===z.id?' selected':'')+'>'+z.name+'</option>'}).join('')+'</select>';
+  }
+
+  var LAYERS=[['Подвал и коммуникации','Держим подвалы сухими и закрытыми, следим за вводами труб и кабелей в дом.'],['Отопление, вода, электричество','Обслуживаем тепловой узел и электрощитовые. Каждое лето промываем и опрессовываем систему отопления.'],['Подъезды и лифты','Убираем подъезды, следим за светом и дверями. Контролируем работу лифтовой организации.'],['Кровля и фасад','Осматриваем крышу, чистим водостоки, зимой убираем снег и наледь. Следим за фасадом и входными группами.'],['Двор','Убираем территорию и вывозим мусор, следим за освещением и детскими площадками. Зимой чистим и посыпаем дорожки.']];
+  function layersHtml(){return '<div class="grid g2" style="align-items:start"><div><h2 style="margin-bottom:8px">Отвечаем за дом целиком: от&nbsp;подвала до&nbsp;двора</h2><ol class="steps" style="margin-top:12px">'+LAYERS.map(function(l){return '<li><div><b>'+l[0]+'</b><div class="sm mut">'+l[1]+'</div></div></li>'}).join('')+'</ol><p class="xs mut" style="margin-top:12px">Всё, что внутри квартиры после первого крана и автомата, — зона собственника. Подскажем, к кому обратиться.</p></div><div class="ph" style="aspect-ratio:1">схема дома по слоям: подвал → сети → подъезды → кровля → двор.<br>В дизайне — сборка слоёв по скроллу</div></div>'}
+    /* ================= СТРАНИЦЫ ================= */
+  var P={};
+  P.home={t:'Главная',r:function(){
+    var h='';
+    h+=blk('H1','Первый экран',
+      '<div class="hero"><div style="display:flex;flex-direction:column;gap:16px"><h1>Дом работает&nbsp;— вы&nbsp;живёте.<br>Управляющая компания<br>Современный город</h1><p class="mut">Следим за инженерными системами, чистотой и двором. Предупреждаем о работах заранее и отвечаем на все возникшие вопросы по существу.</p>'+
+      '<div class="box"><label class="sm" for="hq" style="font-weight:600;display:block;margin-bottom:8px">Найдите свой дом по адресу</label><form class="picker" id="hform"><input class="f" id="hq" list="addrs" autocomplete="off" placeholder="Например: Землячки, 84/3" style="flex:1;min-width:200px;border:1px solid var(--line);border-radius:6px;padding:8px 10px;min-height:40px;background:var(--bg)"><button class="btn" type="submit">Найти</button></form>'+
+      '<datalist id="addrs">'+ADDR.map(function(a){return '<option value="'+a.s+'">'}).join('')+'</datalist><div class="xs mut" id="hmsg" style="margin-top:8px">'+hn(TOTAL)+' в управлении · или <a href="#objects">выберите ЖК из списка</a></div></div></div>'+
+      '<div style="display:flex;flex-direction:column;gap:14px"><div class="ph" style="flex:1;min-height:200px">фото двора / короткое видео 16:9</div><div class="ads-card"><span class="xs mut">Авария, протечка, нет света или воды, застрял лифт</span><a class="tel" href="tel:+78442000000">+7 (8442) 00-00-00</a><span class="sm">Диспетчерская · круглосуточно</span><a class="btn" href="tel:+78442000000">Позвонить</a></div></div></div>',
+      {w:'Два главных сценария жителя: «срочно позвонить» и «найти свой дом». Оба на первом экране, без прокрутки. Заголовок один, в три строки, целиком в теге H1: название УК в нём есть, это хорошо для поиска.',c:'Заголовок в три строки (слоган + название УК), подзаголовок, 1 фото или видео двора, телефон АДС, поиск по 47 адресам из реестра.',t:'Zero Block. Поиск по адресу — T123 (небольшой скрипт со списком адресов) или кнопки на страницы ЖК.'});
+    h+=blk('H2','Сегодня в домах',
+      '<div class="row" style="justify-content:space-between;margin-bottom:14px"><h2>Сегодня в домах</h2><span class="xs mut">обновлено в 08:30</span></div><div class="today">'+
+      ZHK.map(function(z){return '<a href="#zhk-'+z.id+'"><b>'+z.name+'</b>'+stOf(z)+'<span class="mut">→</span></a>'}).join('')+'</div>',
+      {n:'статус и отключения по каждому ЖК',w:'Главный повод зайти на сайт УК — «почему нет воды». Ответ здесь снимает звонки в диспетчерскую.',c:'Статус на день по ЖК: штатно / плановые работы / отключение. Обновляет диспетчер.',t:'T-блок «Список» или Zero с текстом. Обновлять вручную; позже можно вывести из Google-таблицы.'},true);
+    h+=blk('H3','Что мы обслуживаем',layersHtml(),
+      {w:'Житель понимает, за что отвечает УК, и с чем идти к нам, а с чем — к своему мастеру. Снимает спорные звонки.',c:'5 слоёв дома: заголовок + 1–2 предложения что делаем. Граница ответственности — строкой внизу.',t:'В дизайне — Zero Block + T123 со сборкой слоёв по скроллу (GSAP), на мобильном — статичная схема.'});
+    h+=blk('H4','Объекты',
+      '<div class="row" style="justify-content:space-between;margin-bottom:16px"><h2>Наши дома</h2><a class="btn o s" href="#objects">Все объекты</a></div><div class="grid g3">'+
+      ZHK.map(function(z){return '<a class="zcard" href="#zhk-'+z.id+'"><div class="ph">фото ЖК</div><h3>'+z.title+'</h3><div class="xs mut">'+z.addr+' · '+hn(z.n)+'</div></a>'}).join('')+'</div>',
+      {w:'ТЗ п.2 и «разбивка по ЖК». С главной — в один клик на страницу дома.',c:'Фото, название, адрес, число домов по каждому ЖК.',t:'Каталог (Store): ЖК = карточка товара со своей страницей.'});
+    h+=blk('H5','Документы и отопительный сезон',
+      '<h2 style="margin-bottom:6px">Документы домов</h2><p class="mut sm" style="margin-bottom:18px">Отчёты и акты по каждому ЖК, без запроса в офис.</p><div class="grid g3">'+
+      [['report','Годовой отчёт','За 2025 год, по каждому ЖК'],['flush','Промывка и опрессовка','Акты 2026 года'],['plan','График подготовки к сезону','2026/27, все ЖК']].map(function(x){return '<a class="box" href="#docs" style="text-decoration:none;display:flex;flex-direction:column;gap:6px"><div class="ph" style="height:60px">иконка</div><h3>'+x[1]+'</h3><span class="xs mut">'+x[2]+'</span></a>'}).join('')+
+      '</div><div class="box" style="margin-top:16px;display:flex;gap:14px;align-items:center;flex-wrap:wrap"><b style="font-size:28px">'+READY+' из '+TOTAL+'</b><span class="sm">домов получили паспорт готовности к отопительному периоду 2026/27.</span><a href="#docs" class="sm">Смотреть акты →</a></div>',
+      {w:'ТЗ п.5: годовой отчёт, промывка и опрессовка, график. Три плитки ведут сразу в отфильтрованный список.',c:'PDF-файлы по каждому ЖК, дата, год.',t:'Zero Block с 3 кнопками-ссылками на страницу документов с фильтром.'},true);
+    h+=blk('H6','Мероприятия',
+      '<div class="row" style="justify-content:space-between;margin-bottom:16px"><h2>Мероприятия во дворах</h2><a class="btn o s" href="#events">Все мероприятия</a></div>'+
+      '<div class="box" style="margin-bottom:16px;display:flex;gap:14px;flex-wrap:wrap;align-items:center"><span class="xs mut">Скоро</span><b>'+UPCOMING[1].title+'</b><span class="sm mut">'+UPCOMING[1].date+'</span></div>'+
+      '<div class="grid g3">'+EVENTS.slice(0,3).map(evCard).join('')+'</div>',
+      {w:'ТЗ п.3. Показывает, что УК — это не только счёт: сильнее всего влияет на отношение жителей.',c:'Анонс ближайшего события + 3 последних с фото.',t:'Каталог «Мероприятия» в режиме «3 последних».'});
+    h+=blk('H7','Куда обращаться',
+      '<h2 style="margin-bottom:16px">Куда обращаться</h2><div class="grid g3">'+
+      '<div class="box"><span class="xs mut">Срочно, круглосуточно</span><h3 style="margin:6px 0">Авария</h3><p class="sm mut">Протечка, нет воды или света, застрял лифт, запах газа</p><a class="tel" href="tel:+78442000000" style="display:block;margin-top:10px">+7 (8442) 00-00-00</a></div>'+
+      '<div class="box"><span class="xs mut">Будни, 08:00–17:00</span><h3 style="margin:6px 0">Вопрос по дому</h3><p class="sm mut">Уборка, ремонт в подъезде, двор, пропуска</p><a href="#objects" style="display:block;margin-top:10px">Управляющий вашего ЖК →</a></div>'+
+      '<div class="box"><span class="xs mut">Будни, 08:00–17:00</span><h3 style="margin:6px 0">Квитанции и оплата</h3><p class="sm mut">Начисления, перерасчёт, показания счётчиков</p><a class="tel" href="tel:+78442000002" style="display:block;margin-top:10px">+7 (8442) 00-00-02</a></div></div>',
+      {n:'маршрутизация обращений',w:'ТЗ п.4 «звонок напрямую». Житель сразу звонит нужному человеку, а не в общий номер.',c:'3 номера: АДС, управляющие по ЖК, бухгалтерия. Часы работы.',t:'Zero Block, телефоны — ссылки tel:.'});
+    h+=blk('H8','О компании (кратко)',
+      '<div class="grid g2"><div><h2 style="margin-bottom:10px">О компании</h2><p class="mut">Обслуживаем дома с момента сдачи: знаем их инженерию с проекта и быстро решаем вопросы с застройщиком.</p><a href="#about" class="btn o s" style="margin-top:14px">Подробнее</a></div>'+
+      '<div class="grid g3"><div class="box"><b style="font-size:24px">'+NZHK+'</b><div class="xs mut">жилых комплексов</div></div><div class="box"><b style="font-size:24px">'+TOTAL+'</b><div class="xs mut">домов, включая 3 отдельных</div></div><div class="box"><b style="font-size:24px">— м²</b><div class="xs mut">в управлении</div></div></div></div>',
+      {w:'Доверие: кто мы и почему с нами спокойно.',c:'Короткий текст и 3 цифры. Цифры уточнить у УК.',t:'Zero Block.'},true);
+    return h;
+  }};
+
+  P.objects={t:'Объекты',r:function(){
+    var h=blk('O1','Список объектов',
+      '<div class="crumbs"><a href="#home">Главная</a> / Объекты</div><h1 style="margin-bottom:10px">Объекты в обслуживании</h1><p class="mut" style="margin-bottom:22px">'+NZHK+' жилых комплексов и 3 отдельных дома, всего '+hn(TOTAL)+' в Волгограде. Выберите свой, чтобы увидеть уведомления, документы и контакты управляющего.</p>'+
+      '<div class="ph" style="height:260px;margin-bottom:24px">Яндекс Карта: точки всех ЖК, клик ведёт на страницу ЖК</div><div class="grid g2">'+
+      ZHK.map(function(z){return '<div class="box" style="display:grid;grid-template-columns:minmax(0,140px) minmax(0,1fr);gap:16px"><div class="ph" style="aspect-ratio:1">фото ЖК</div><div style="display:flex;flex-direction:column;gap:6px"><h3>'+z.title+'</h3><span class="xs mut">'+hn(z.n)+'</span><span class="sm">'+addrList(z)+'</span>'+stOf(z)+'<div class="row" style="margin-top:6px"><a class="btn s" href="#zhk-'+z.id+'">Страница ЖК</a><a class="btn o s" href="'+tel(z.tel)+'">Управляющий</a></div></div></div>'}).join('')+'</div>',
+      {w:'ТЗ п.2 «страница с нашими объектами». Карта отвечает на «а мой дом ваш?».',c:'По каждому ЖК: фото, все адреса домов из реестра, телефон управляющего. Реестр на 15.10.2026: 10 ЖК + 3 отдельных дома, 47 домов.',t:'Каталог (Store) + блок «Карта» Тильды с точками.'});
+    return h;
+  }};
+
+  P.zhk={t:'Страница ЖК',r:function(id){
+    var z=byId(id)||ZHK[0],n=NOTICES.filter(function(x){return x.z===z.id}),d=docsFor(z),ev=EVENTS.filter(function(e){return e.z===z.id});
+    var h='';
+    h+=blk('Z1','Шапка ЖК',
+      '<div class="crumbs"><a href="#home">Главная</a> / <a href="#objects">Объекты</a> / '+z.name+'</div>'+
+      '<div class="hero"><div style="display:flex;flex-direction:column;gap:12px"><h1>'+z.title+'</h1><span class="mut">Волгоград · '+hn(z.n)+' в управлении</span>'+stOf(z)+
+      '<div class="row" style="margin-top:8px"><a class="btn" href="tel:+78442000000">Диспетчерская 24/7</a><a class="btn o" href="'+tel(z.tel)+'">Управляющий: '+z.tel+'</a></div>'+
+      '<div class="box" style="margin-top:6px"><div class="xs mut" style="margin-bottom:6px">Дома в управлении</div><div class="sm">'+addrList(z)+'</div></div><label class="sm mut" style="margin-top:8px">Другой ЖК: '+zSelect('zsw',z.id,false)+'</label></div><div class="ph" style="min-height:220px">фото ЖК</div></div>',
+      {w:'«Разбивка по ЖК» из ТЗ: у каждого ЖК своя страница со всем, что касается только его.',c:'Название, все адреса домов (из реестра), фото, телефоны АДС и управляющего. Отдельные дома — та же страница «Отдельные дома».',t:'Страница товара каталога (шаблон один на все ЖК) или отдельная страница на ЖК.'});
+    h+='<div class="anchors"><div class="c row" style="flex-wrap:nowrap"><a class="chip" href="#zhk-'+z.id+'" data-go="zn">Уведомления</a><a class="chip" data-go="zw">Отопительный сезон</a><a class="chip" data-go="zd">Документы</a><a class="chip" data-go="ze">Мероприятия</a><a class="chip" data-go="zc">Контакты</a><a class="chip" data-go="zf">Жителям</a></div></div>';
+    h+='<div id="zn"></div>'+blk('Z2','Уведомления',
+      '<h2 style="margin-bottom:14px">Уведомления</h2>'+(n.length?n.map(function(x){return '<div class="box" style="margin-bottom:10px"><span class="st '+x.t+'"><i></i><b>'+x.d+'</b> · '+(x.t==='warn'?'отключение':'плановые работы')+'</span><p style="margin-top:6px">'+x.x+'</p></div>'}).join(''):'<div class="empty">Плановых работ и отключений нет</div>'),
+      {n:'уведомления по ЖК',w:'Житель сразу видит, что отключение плановое и до скольки. Меньше звонков и раздражения.',c:'Дата, что, где (дом/подъезд), до скольки, что работает.',t:'Текстовый блок, правит диспетчер. Пустое состояние — «работ нет».'},true);
+    h+='<div id="zw"></div>'+blk('Z3','Подготовка к отопительному сезону',
+      '<h2 style="margin-bottom:14px">Отопительный сезон 2026/27</h2><ul class="check">'+
+      '<li><span class="y">✓</span>Гидропромывка системы отопления · '+z.flush+'</li><li><span class="y">✓</span>Опрессовка (гидравлические испытания) · '+z.flush+'</li>'+
+      '<li>'+(z.pass?'<span class="y">✓</span>Паспорт готовности получен · '+z.pass:'<span class="n">…</span>Паспорт готовности — в работе, ожидаем до 15 ноября')+'</li></ul>',
+      {w:'ТЗ п.5 в понятном виде: не просто файлы, а статус «дом готов к зиме».',c:'Даты работ и статус паспорта по ЖК.',t:'Zero Block или текст со списком.'});
+    h+='<div id="zd"></div>'+blk('Z4','Документы дома',
+      '<div class="row" style="justify-content:space-between;margin-bottom:8px"><h2>Документы: '+z.title+'</h2><a class="sm" href="#docs">Все документы →</a></div>'+d.map(function(x){return docRow(x,false)}).join('')+COMPANY_DOCS.slice(0,1).map(function(x){return docRow(x,false)}).join(''),
+      {w:'ТЗ п.5 с разбивкой по ЖК: житель видит только документы своего дома.',c:'Годовые отчёты по годам, акты промывки/опрессовки, паспорт готовности, общий график.',t:'Каталог «Документы» с фильтром по ЖК или список ссылок на PDF.'},true);
+    h+='<div id="ze"></div>'+blk('Z5','Мероприятия ЖК',
+      '<h2 style="margin-bottom:14px">Мероприятия во дворе</h2>'+(ev.length?'<div class="grid g3">'+ev.map(evCard).join('')+'</div>':'<div class="empty">Здесь появятся фото и видео с мероприятий вашего двора</div>'),
+      {w:'Связь с ТЗ п.3: мероприятия именно этого двора.',c:'Карточки мероприятий ЖК.',t:'Каталог «Мероприятия», фильтр по ЖК.'});
+    h+='<div id="zc"></div>'+blk('Z6','Контакты ЖК',
+      '<h2 style="margin-bottom:14px">Контакты</h2><div class="grid g3">'+
+      '<div class="box" style="display:grid;grid-template-columns:72px minmax(0,1fr);gap:12px"><div class="ph" style="aspect-ratio:1">фото</div><div><span class="xs mut">Управляющий ЖК</span><h3>'+z.mgr+'</h3><a class="tel" href="'+tel(z.tel)+'">'+z.tel+'</a><div class="xs mut">Приём: вт, чт 16:00–19:00</div></div></div>'+
+      '<div class="box"><span class="xs mut">Диспетчерская 24/7</span><h3>Аварии</h3><a class="tel" href="tel:+78442000000">+7 (8442) 00-00-00</a></div>'+
+      '<div class="box"><span class="xs mut">Подрядчики</span><div class="sm" style="margin-top:6px">Лифты — ООО «—»<br>Вывоз мусора — ООО «—»<br>Домофон — ООО «—»</div></div></div>',
+      {w:'ТЗ п.4 «звонок напрямую»: свой управляющий у каждого ЖК, с лицом и часами приёма.',c:'ФИО, фото, телефон, часы приёма; подрядчики — по желанию.',t:'Zero Block на странице ЖК.'},true);
+    h+='<div id="zf"></div>'+blk('Z7','Жителям',
+      '<h2 style="margin-bottom:8px">Жителям</h2>'+
+      '<details><summary>Как передать показания счётчиков</summary><p>Срок и способ — уточнить у УК (квитанция, ГИС ЖКХ, приложение банка или ЕИРЦ).</p></details>'+
+      '<details><summary>Как оплатить квитанцию</summary><p>Способы оплаты и реквизиты — уточнить у УК.</p></details>'+
+      '<details><summary>Ремонт в квартире: время работ и вывоз мусора</summary><p>Разрешённое время шумных работ, порядок вывоза строительного мусора, согласование перепланировки.</p></details>'+
+      '<details><summary>Как оформить пропуск для грузчиков или подрядчиков</summary><p>Порядок — уточнить у УК.</p></details>',
+      {n:'FAQ для жителей и новосёлов',w:'Дома новые: много новосёлов с одинаковыми вопросами. FAQ снимает часть звонков управляющему.',c:'5–8 вопросов, ответы даёт УК.',t:'Блок «Вопросы и ответы» (аккордеон).'});
+    return h;
+  }};
+
+  var evF={z:'',k:'',y:''};
+  P.events={t:'Мероприятия',r:function(){
+    var list=EVENTS.filter(function(e){return (!evF.z||e.z===evF.z)&&(!evF.k||(evF.k==='video'?e.video:e.photo))&&(!evF.y||String(e.y)===evF.y)});
+    var h=blk('M1','Анонсы',
+      '<div class="crumbs"><a href="#home">Главная</a> / Мероприятия</div><h1 style="margin-bottom:18px">Мероприятия</h1><h2 style="margin-bottom:12px;font-size:20px">Скоро</h2>'+
+      UPCOMING.map(function(u){return '<div class="box" style="margin-bottom:10px;display:grid;grid-template-columns:minmax(140px,200px) minmax(0,1fr);gap:14px"><b>'+u.date+'</b><div><b>'+u.title+'</b><div class="xs mut">'+(u.z?byId(u.z).title+' · ':'Все ЖК · ')+u.place+'</div></div></div>'}).join(''),
+      {n:'анонсы будущих событий',w:'Без анонса жители узнают о празднике постфактум. Анонс + фотоотчёт = полный цикл.',c:'Дата, время, место, ЖК.',t:'Текстовый блок или каталог с категорией «Анонс».'});
+    h+=blk('M2','Архив: фото и видео',
+      '<div class="row" style="margin-bottom:18px">'+zSelect('ef',evF.z,true)+
+      '<select class="f" id="ek"><option value="">Фото и видео</option><option value="photo"'+(evF.k==='photo'?' selected':'')+'>С фото</option><option value="video"'+(evF.k==='video'?' selected':'')+'>С видео</option></select>'+
+      '<select class="f" id="ey"><option value="">Все годы</option><option'+(evF.y==='2026'?' selected':'')+'>2026</option><option'+(evF.y==='2025'?' selected':'')+'>2025</option></select><span class="sm mut">'+list.length+' из '+EVENTS.length+'</span></div>'+
+      (list.length?'<div class="grid g3">'+list.map(evCard).join('')+'</div>':'<div class="empty">По этим условиям мероприятий нет. <a href="#events" id="ereset">Сбросить фильтры</a></div>'),
+      {w:'ТЗ п.3 «фото + видео» и разбивка по ЖК: житель находит свой двор.',c:'Обложка, дата, ЖК, название, число фото и видео.',t:'Каталог «Мероприятия»: фильтры по характеристикам «ЖК», «Год», «Видео».'},true);
+    return h;
+  }};
+
+  P.event={t:'Мероприятие',r:function(id){
+    var e=EVENTS.filter(function(x){return x.id===id})[0]||EVENTS[0],z=byId(e.z),g='';
+    for(var i=0;i<8;i++)g+='<div class="ph" style="aspect-ratio:4/3">фото '+(i+1)+'</div>';
+    var h=blk('M3','Страница мероприятия',
+      '<div class="crumbs"><a href="#home">Главная</a> / <a href="#events">Мероприятия</a> / '+e.title+'</div><span class="xs mut">'+e.date+' · <a href="#zhk-'+z.id+'">'+z.title+'</a></span><h1 style="margin:8px 0 14px">'+e.title+'</h1>'+
+      '<p class="mut" style="max-width:68ch;margin-bottom:22px">2–3 предложения: что было, сколько пришло, кто помог. Текст пишет УК.</p>'+
+      (e.video?'<div class="ph" style="aspect-ratio:16/9;margin-bottom:16px">видео: VK Видео / Rutube (встраивание)</div>':'')+
+      '<div class="grid g4">'+g+'</div><div class="xs mut" style="margin-top:8px">Показано 8 из '+e.photo+' · клик открывает фото на весь экран</div>',
+      {w:'Фото и видео в одном месте, с листанием на весь экран.',c:'Текст, 10–40 фото, видео (если есть).',t:'Страница товара каталога: галерея + блок «Видео» (VK/Rutube).'});
+    h+=blk('M4','Другие мероприятия','<h2 style="margin-bottom:14px">Другие мероприятия</h2><div class="grid g3">'+EVENTS.filter(function(x){return x.id!==e.id}).slice(0,3).map(evCard).join('')+'</div>',null,true);
+    return h;
+  }};
+
+  var dF={z:'',t:'',y:''};
+  P.docs={t:'Документы',r:function(){
+    var all=[];ZHK.forEach(function(z){all=all.concat(docsFor(z))});
+    var list=all.filter(function(d){return (!dF.z||d.z.id===dF.z)&&(!dF.t||d.t===dF.t)&&(!dF.y||String(d.y)===dF.y)});
+    var types='<span class="chip'+(!dF.t?' on':'')+'" data-t="">Все</span>'+Object.keys(DT).filter(function(k){return k!=='plan'}).map(function(k){return '<span class="chip'+(dF.t===k?' on':'')+'" data-t="'+k+'">'+DT[k]+'</span>'}).join('');
+    var h=blk('D1','Документы домов',
+      '<div class="crumbs"><a href="#home">Главная</a> / Документы</div><h1 style="margin-bottom:10px">Документы</h1><p class="mut" style="margin-bottom:20px;max-width:68ch">Отчёты, акты и паспорта готовности по каждому ЖК. Полное раскрытие информации — в ГИС ЖКХ.</p>'+
+      '<div class="row" style="margin-bottom:12px">'+zSelect('df',dF.z,true)+'<select class="f" id="dy"><option value="">Все годы</option><option'+(dF.y==='2026'?' selected':'')+'>2026</option><option'+(dF.y==='2025'?' selected':'')+'>2025</option></select></div>'+
+      '<div class="row" id="dtypes" style="margin-bottom:16px">'+types+'</div><div class="sm mut" style="margin-bottom:6px">Найдено: '+list.length+'</div>'+
+      (!list.length?'<div class="empty">Документов по этим условиям нет. <a href="#docs" id="dreset">Сбросить фильтры</a></div>':
+        dF.z?list.map(function(d){return docRow(d,false)}).join(''):
+        ZHK.map(function(z){var l=list.filter(function(d){return d.z===z});if(!l.length)return '';return '<details><summary>'+z.title+' <span class="mut" style="font-weight:400">· '+l.length+' док.</span></summary>'+l.map(function(d){return docRow(d,false)}).join('')+'</details>'}).join('')),
+      {w:'ТЗ п.5 + разбивка по ЖК. Без выбора ЖК список свёрнут по комплексам, чтобы не листать 30 файлов. Фильтр по типу и году — за 2 клика к нужному отчёту.',c:'PDF по каждому ЖК: годовой отчёт, акты промывки и опрессовки, паспорт готовности.',t:'Каталог «Документы»: характеристики ЖК / Тип / Год, файл — ссылка на PDF.'});
+    h+=blk('D2','Общие документы компании',
+      '<h2 style="margin-bottom:8px">Общие документы</h2>'+COMPANY_DOCS.map(function(d){return docRow(d,false)}).join('')+
+      '<div class="box" style="margin-top:18px"><b>Раскрытие информации</b><p class="sm mut" style="margin-top:4px">Сведения об УК, тарифы, договоры и отчёты по закону публикуются в ГИС ЖКХ. Ссылка на страницу компании: dom.gosuslugi.ru → (уточнить).</p></div>',
+      {w:'График подготовки (ТЗ п.5) — общий на все ЖК. Лицензия и договор — вопросы доверия.',c:'График, лицензия, образец договора управления, ссылка на ГИС ЖКХ.',t:'Список ссылок на PDF.'},true);
+    return h;
+  }};
+
+  P.about={t:'О компании',r:function(){
+    var h=blk('A1','Текст о компании',
+      '<div class="crumbs"><a href="#home">Главная</a> / О компании</div><div class="grid g2" style="align-items:start"><div class="prose"><h1 style="margin-bottom:18px">О компании</h1>'+
+      '<p>«Современный город» управляет жилыми комплексами в Волгограде. Мы принимаем дома в управление с момента сдачи, поэтому знаем их инженерию с проекта: где проходят сети, какое стоит оборудование и как оно должно работать.</p>'+
+      '<p>Наша задача простая: чтобы в доме было тепло, светло, чисто и спокойно, а жильцы не тратили время на выяснения. Для этого у каждого ЖК есть свой управляющий, диспетчерская работает круглосуточно, а отчёты и акты каждого дома лежат на сайте в открытом доступе.</p>'+
+      '<p>Если что-то сломалось, мы сначала называем срок и ответственного, потом чиним и показываем результат. О плановых работах предупреждаем заранее, об авариях — сразу.</p>'+
+      '<p class="xs mut">Черновик текста. Цифры, год основания и формулировки согласовать с УК.</p></div><div class="ph" style="aspect-ratio:4/3">фото команды или офиса</div></div>',
+      {w:'ТЗ п.1 «проработать текстовку». Текст отвечает на 3 вопроса жителя: кто вы, почему вам можно доверять, что будет, если что-то сломается.',c:'3 абзаца (черновик готов), фото.',t:'Текстовый блок + изображение.'});
+    h+=blk('A2','Цифры',
+      '<div class="grid g4"><div class="box"><b style="font-size:28px">'+NZHK+'</b><div class="xs mut">жилых комплексов</div></div><div class="box"><b style="font-size:28px">'+TOTAL+'</b><div class="xs mut">домов, включая 3 отдельных</div></div><div class="box"><b style="font-size:28px">— м²</b><div class="xs mut">общая площадь</div></div><div class="box"><b style="font-size:28px">24/7</b><div class="xs mut">диспетчерская</div></div></div>',
+      {w:'Масштаб = надёжность.',c:'Точные цифры — от УК.',t:'Zero Block.'},true);
+    h+=blk('A3','Что мы обслуживаем',layersHtml(),
+      {w:'Житель понимает, с чем идти в УК, а с чем — нет.',c:'Тот же блок, что на главной.',t:'Тот же блок, копия с главной.'});
+    h+=blk('A4','Как мы работаем с заявками',
+      '<h2 style="margin-bottom:10px">Как мы работаем с заявками</h2><ol class="steps"><li><div><b>Принимаем заявку</b><div class="sm mut">По телефону диспетчерской или управляющему ЖК</div></div></li><li><div><b>Называем срок и ответственного</b><div class="sm mut">Сразу, при звонке</div></div></li><li><div><b>Выполняем работу</b><div class="sm mut">Аварийные — в нормативные сроки</div></div></li><li><div><b>Сообщаем о результате</b><div class="sm mut">Звонком или сообщением</div></div></li></ol>',
+      {w:'Снимает главный страх: «позвоню, и ничего не будет».',c:'4 шага. Сроки реакции — согласовать с УК.',t:'Zero Block, шаги.'},true);
+    h+=blk('A5','Руководство, лицензия, реквизиты',
+      '<div class="grid g2"><div><h2 style="margin-bottom:14px">Руководство</h2><div class="grid g2"><div class="box"><div class="ph" style="aspect-ratio:1;margin-bottom:10px">фото</div><b>ФИО</b><div class="xs mut">Генеральный директор</div></div><div class="box"><div class="ph" style="aspect-ratio:1;margin-bottom:10px">фото</div><b>ФИО</b><div class="xs mut">Главный инженер</div></div></div></div>'+
+      '<div><h2 style="margin-bottom:14px">Реквизиты</h2><table><tr><th>Полное название</th><td>ООО «Современный город»</td></tr><tr><th>ИНН / КПП</th><td>—</td></tr><tr><th>ОГРН</th><td>—</td></tr><tr><th>Лицензия</th><td>№ — от — (скан PDF)</td></tr><tr><th>Юр. адрес</th><td>—</td></tr></table></div></div>',
+      {w:'Официальность: лицензия и реквизиты — первое, что проверяют недовольные жильцы.',c:'ФИО, должности, фото; реквизиты, скан лицензии.',t:'Zero Block + таблица текстом.'});
+    return h;
+  }};
+
+  P.contacts={t:'Контакты',r:function(){
+    var h=blk('C1','Диспетчерская',
+      '<div class="crumbs"><a href="#home">Главная</a> / Контакты</div><h1 style="margin-bottom:18px">Контакты</h1>'+
+      '<div class="ads-card" style="max-width:640px"><span class="xs mut">Диспетчерская · круглосуточно</span><a class="tel" href="tel:+78442000000" style="font-size:clamp(28px,4vw,42px)">+7 (8442) 00-00-00</a><span class="sm">Протечка, нет воды, света или тепла, застрял лифт, запах газа (газ — также 104)</span><a class="btn" href="tel:+78442000000" style="align-self:flex-start">Позвонить</a></div>',
+      {w:'ТЗ п.4 «звонок напрямую»: номер АДС крупно, нажатие сразу звонит.',c:'Номер, что считается аварией.',t:'Zero Block, кнопка tel:.'});
+    h+=blk('C2','Куда звонить',
+      '<h2 style="margin-bottom:12px">Куда звонить</h2><div class="tw"><table><tr><th>Вопрос</th><th>Куда</th><th>Когда</th></tr>'+
+      '<tr><td>Авария, отключение, лифт</td><td><a class="tel" href="tel:+78442000000">+7 (8442) 00-00-00</a></td><td>Круглосуточно</td></tr>'+
+      '<tr><td>Уборка, ремонт в подъезде, двор</td><td>Управляющий вашего ЖК (ниже)</td><td>Пн–Пт 08:00–17:00</td></tr>'+
+      '<tr><td>Квитанции, перерасчёт, показания</td><td><a class="tel" href="tel:+78442000002">+7 (8442) 00-00-02</a></td><td>Пн–Пт 08:00–17:00</td></tr>'+
+      '<tr><td>Регистрация, справки</td><td><a class="tel" href="tel:+78442000003">+7 (8442) 00-00-03</a></td><td>уточнить</td></tr>'+
+      '<tr><td>Письменное обращение</td><td>В офисе, по почте info@ — или через ГИС ЖКХ / «Госуслуги. Дом»</td><td>—</td></tr></table></div>',
+      {n:'таблица маршрутизации',w:'Житель звонит сразу туда, где помогут. Официальные каналы обращений нужны по закону и для доверия.',c:'Номера и часы всех служб — уточнить у УК.',t:'Текстовый блок / таблица.'},true);
+    h+=blk('C3','Управляющие по ЖК',
+      '<h2 style="margin-bottom:12px">Управляющие ЖК</h2><div class="tw"><table><tr><th>ЖК</th><th>Управляющий</th><th>Телефон</th><th>Приём</th></tr>'+
+      ZHK.map(function(z){return '<tr><td><a href="#zhk-'+z.id+'">'+z.name+'</a></td><td>'+z.mgr+'</td><td><a class="tel" href="'+tel(z.tel)+'">'+z.tel+'</a></td><td class="mut">вт, чт 16:00–19:00</td></tr>'}).join('')+'</table></div>',
+      {w:'«Разбивка по ЖК» в контактах: у каждого дома свой человек.',c:'ФИО и прямые номера управляющих.',t:'Zero Block или таблица текстом.'});
+    h+=blk('C4','Офис',
+      '<div class="grid g2"><div><h2 style="margin-bottom:12px">Офис</h2><p>Адрес — уточнить</p><p class="mut sm" style="margin:6px 0 14px">Пн–Пт 08:00–17:00, обед 12:00–13:00</p><p><a class="tel" href="tel:+78442000001">+7 (8442) 00-00-01</a></p><p class="sm">info@ — уточнить</p><div class="row" style="margin-top:12px"><span class="chip">Telegram</span><span class="chip">MAX</span><span class="chip">ВКонтакте</span></div></div><div class="ph" style="min-height:240px">Яндекс Карта: офис</div></div>',
+      {w:'Где найти УК лично.',c:'Адрес, часы, телефон, почта, мессенджеры.',t:'Блок «Контакты» + «Карта».'},true);
+    return h;
+  }};
+
+  P.brief={t:'Анализ и ТЗ',r:function(){
+    var tz=[['1','О компании, проработать текстовку','О компании: черновик текста, цифры, принципы, реквизиты','#about'],['2','Объекты в обслуживании','Объекты: карта + карточки, у каждого ЖК своя страница','#objects'],['3','Мероприятия, фото + видео','Мероприятия: анонсы, архив с фильтром, страница с галереей и видео','#events'],['4','Контакты, звонок напрямую','Все телефоны — ссылки tel:, АДС в шапке и в нижней панели на телефоне','#contacts'],['5','Годовой отчёт, промывка и опрессовка, график подготовки','Документы: фильтр ЖК / тип / год + блок на странице каждого ЖК','#docs'],['+','Разбивка по ЖК','Страница ЖК, фильтр по ЖК в документах и мероприятиях, управляющие по ЖК','#zhk-geroi']];
+    var add=[['m','Статус «сегодня в домах» и уведомления по ЖК','Главная причина визита на сайт УК — отключения. Без этого жители звонят в АДС.'],['m','Телефон АДС на каждом экране + нижняя панель «Позвонить» на телефоне','ТЗ п.4; жители чаще всего открывают сайт УК с телефона, когда что-то случилось.'],['m','Готовность к зиме как статус, а не только файлы','Акт промывки житель не читает; «паспорт готовности получен» — понимает.'],['m','Ссылка на ГИС ЖКХ и годовой отчёт по единой форме','Раскрытие информации идёт через ГИС ЖКХ; с 01.03.2026 отчёт УК — по единой форме Минстроя.'],['s','Таблица «куда звонить» + управляющие ЖК с часами приёма','Звонок сразу нужному человеку — суть «звонка напрямую».'],['s','Анонсы мероприятий','Иначе раздел работает только как фотоархив.'],['c','FAQ для жителей и новосёлов','Дома новые: ремонт, вывоз мусора, пропуска.'],['c','Подрядчики по ЖК (лифты, мусор, домофон)','Прозрачность; можно позже.']];
+    var q=['Реестр домов получен (на 15.10.2026: 10 ЖК + 3 отдельных дома, 47 домов). Подтвердить, нет ли новых домов с середины октября; фото каждого ЖК','Телефоны: АДС, офис, бухгалтерия, паспортный стол; кто ведёт приём жителей по каждому ЖК','Кто и как часто будет обновлять «сегодня в домах» и уведомления (диспетчер? управляющие?)','Как жители платят и передают показания (ГИС ЖКХ, банк, ЕИРЦ, своё приложение)','Есть ли страница компании в ГИС ЖКХ — ссылка','Реквизиты, лицензия (номер и скан), руководство для страницы «О компании»','Фото ЖК и мероприятий; где хранить видео (VK Видео / Rutube)','Нужны ли мессенджеры и онлайн-заявка, или только звонок'];
+    var h=blk('B1','Покрытие ТЗ',
+      '<h1 style="margin-bottom:18px">Анализ: ТЗ, практики УК и решения прототипа</h1><div class="tw"><table><tr><th>п.</th><th>Требование ТЗ</th><th>Как решено</th><th></th></tr>'+tz.map(function(r){return '<tr><td>'+r[0]+'</td><td>'+r[1]+'</td><td>'+r[2]+'</td><td><a href="'+r[3]+'">смотреть →</a></td></tr>'}).join('')+'</table></div>',null);
+    h+=blk('B2','Что добавлено сверх ТЗ',
+      '<h2 style="margin-bottom:6px">Что добавлено сверх ТЗ</h2><p class="sm mut" style="margin-bottom:12px"><span class="pri m">MUST</span>без этого сайт не решает задачу <span class="pri s">SHOULD</span>сильно помогает <span class="pri c">COULD</span>можно позже</p>'+
+      add.map(function(a){return '<div style="padding:12px 0;border-bottom:1px solid var(--line)"><span class="pri '+a[0]+'">'+({m:'MUST',s:'SHOULD',c:'COULD'})[a[0]]+'</span><b>'+a[1]+'</b><div class="sm mut" style="margin-top:4px">'+a[2]+'</div></div>'}).join(''),null,true);
+    h+=blk('B3','Вопросы заказчику','<h2 style="margin-bottom:12px">Вопросы заказчику</h2><ol style="padding-left:20px">'+q.map(function(x){return '<li style="padding:6px 0">'+x+'</li>'}).join('')+'</ol>',null);
+    h+=blk('B4','Карта сайта','<h2 style="margin-bottom:12px">Карта сайта</h2><div class="grid g4 sm">'+
+      '<div class="box"><b>Главная</b><div class="mut">H1–H8</div></div><div class="box"><b>Объекты</b><div class="mut">→ страница ЖК × 6 (Z1–Z7)</div></div><div class="box"><b>Мероприятия</b><div class="mut">→ страница мероприятия</div></div><div class="box"><b>Документы</b><div class="mut">фильтр ЖК / тип / год</div></div><div class="box"><b>О компании</b><div class="mut">A1–A5</div></div><div class="box"><b>Контакты</b><div class="mut">C1–C4</div></div></div>',null,true);
+    return h;
+  }};
+
+  /* ================= НАВИГАЦИЯ ================= */
+  var NAV=[['objects','Объекты'],['events','Мероприятия'],['docs','Документы'],['about','О компании'],['contacts','Контакты']];
+  var pg=$('#pg');
+  var OPTS=[['home','Главная'],['objects','Объекты'],['zhk-geroi','Страница ЖК'],['events','Мероприятия'],['e2','Мероприятие'],['docs','Документы'],['about','О компании'],['contacts','Контакты'],['brief','Анализ и ТЗ']];
+  pg.innerHTML=OPTS.map(function(o){return '<option value="'+o[0]+'">'+o[1]+'</option>'}).join('');
+  pg.addEventListener('change',function(){location.hash=pg.value});
+  var nt=$('#nt'),notes=true;
+  nt.addEventListener('click',function(){notes=!notes;document.body.classList.toggle('notes-off',!notes);nt.textContent='Пояснения: '+(notes?'вкл':'выкл')});
+  $('#bg').addEventListener('click',function(){$('#mnav').classList.toggle('open')});
+
+  function render(){
+    var h=(location.hash||'#home').slice(1),page='home',arg=null;
+    if(/^zhk-/.test(h)){page='zhk';arg=h.slice(4)}
+    else if(/^e\d+$/.test(h)){page='event';arg=h}
+    else if(P[h])page=h;
+    var navKey=page==='zhk'?'objects':page==='event'?'events':page;
+    $('#nav').innerHTML=NAV.map(function(n){return '<a href="#'+n[0]+'"'+(n[0]===navKey?' class="cur"':'')+'>'+n[1]+'</a>'}).join('');
+    $('#mnav').innerHTML=NAV.map(function(n){return '<a href="#'+n[0]+'">'+n[1]+'</a>'}).join('');$('#mnav').classList.remove('open');
+    var w=NOTICES.filter(function(x){return x.t==='warn'})[0];
+    $('#alert').innerHTML=w?'<div class="c"><b>⚠ '+byId(w.z).title+'</b><span>'+w.x.split('.')[0]+'</span><a href="#zhk-'+w.z+'">Подробнее</a></div>':'';
+    $('#main').innerHTML=P[page].r(arg);
+    var ov=OPTS.filter(function(o){return o[0]===h})[0];pg.value=ov?h:(page==='zhk'?'zhk-geroi':page==='event'?'e2':page);
+    bind(page);
+    window.scrollTo(0,0);
+  }
+  function bind(page){
+    var hf=$('#hform');if(hf)hf.addEventListener('submit',function(e){e.preventDefault();var r=findAddr($('#hq').value);
+      if(r)location.hash='zhk-'+r.z;else $('#hmsg').innerHTML='<b>Такого адреса нет в нашем списке.</b> Проверьте написание или позвоните в диспетчерскую: <a class="tel" href="tel:+78442000000">+7 (8442) 00-00-00</a>'});
+    var zs=$('#zsw');if(zs)zs.addEventListener('change',function(){if(zs.value)location.hash='zhk-'+zs.value});
+    Array.prototype.forEach.call(document.querySelectorAll('[data-go]'),function(a){a.addEventListener('click',function(ev){ev.preventDefault();var t=document.getElementById(a.getAttribute('data-go'));if(t)window.scrollTo({top:t.getBoundingClientRect().top+scrollY-100,behavior:'smooth'})})});
+    if(page==='events'){
+      ['ef','ek','ey'].forEach(function(id,i){$('#'+id).addEventListener('change',function(e){evF[['z','k','y'][i]]=e.target.value;rerender()})});
+      var er=$('#ereset');if(er)er.addEventListener('click',function(e){e.preventDefault();evF={z:'',k:'',y:''};rerender()});
+    }
+    if(page==='docs'){
+      $('#df').addEventListener('change',function(e){dF.z=e.target.value;rerender()});
+      $('#dy').addEventListener('change',function(e){dF.y=e.target.value;rerender()});
+      Array.prototype.forEach.call(document.querySelectorAll('#dtypes .chip'),function(c){c.addEventListener('click',function(){dF.t=c.getAttribute('data-t');rerender()})});
+      var dr=$('#dreset');if(dr)dr.addEventListener('click',function(e){e.preventDefault();dF={z:'',t:'',y:''};rerender()});
+    }
+  }
+  function rerender(){var y=scrollY;render();window.scrollTo(0,y)}
+  function chr(){document.documentElement.style.setProperty('--chr',document.querySelector('.chrome').offsetHeight+'px')}
+  chr();window.addEventListener('resize',chr);
+  window.addEventListener('hashchange',render);
+  render();
+})();
+</script>
+</body>
+</html>
