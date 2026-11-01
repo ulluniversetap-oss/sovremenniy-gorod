@@ -298,7 +298,16 @@ h2.display,h3{text-wrap:balance}
 
 /* ---------- events ---------- */
 .events{padding:clamp(80px,9vw,130px) 0 clamp(70px,8vw,110px);overflow:hidden}
-.events .hd{display:flex;justify-content:space-between;align-items:flex-end;gap:30px;padding:0 var(--gx);margin-bottom:46px}
+.events .hd,.news .hd{display:flex;justify-content:space-between;align-items:flex-end;gap:30px;padding:0 var(--gx);margin-bottom:46px}
+.news{padding:clamp(60px,7vw,100px) 0 clamp(70px,8vw,110px)}
+.news-list{padding:0 var(--gx);display:flex;flex-direction:column}
+.news-item{display:grid;grid-template-columns:150px 1fr;gap:28px;padding:26px 0;border-top:1px solid var(--line)}
+.news-item:first-child{border-top:1px solid var(--line)}
+.news-item .eyebrow{font-variant-numeric:tabular-nums;padding-top:3px}
+.news-item h3{font-weight:400;font-size:clamp(19px,1.9vw,24px);letter-spacing:-.03em;line-height:1.2;margin-bottom:6px}
+.news-item p{font-size:14px;color:var(--mut);max-width:620px}
+.news-empty{padding:0 var(--gx);color:var(--mut);font-size:14px}
+@media(max-width:700px){.news-item{grid-template-columns:1fr;gap:6px}}
 .events h2{font-size:clamp(36px,5.4vw,84px)}
 .mq{display:flex;width:max-content;animation:mq 80s linear infinite;padding-left:var(--gx)}
 .mq:hover{animation-play-state:paused}
@@ -353,6 +362,7 @@ h2.display,h3{text-wrap:balance}
     <nav class="main">
       <a class="roll" href="#objects"><span data-t="Объекты">Объекты</span></a>
       <a class="roll" href="#events"><span data-t="Мероприятия">Мероприятия</span></a>
+      <a class="roll" href="#news"><span data-t="Новости">Новости</span></a>
       <a class="roll" href="#docs"><span data-t="Документы">Документы</span></a>
       <a class="roll" href="#about"><span data-t="О компании">О компании</span></a>
       <a class="roll" href="#contacts"><span data-t="Контакты">Контакты</span></a>
@@ -361,7 +371,7 @@ h2.display,h3{text-wrap:balance}
   </header>
   <div class="menu-scrim" id="menuScrim"></div>
   <div class="menu" id="menu">
-    <a href="#objects">Объекты</a><a href="#events">Мероприятия</a><a href="#docs">Документы</a><a href="#about">О компании</a><a href="#contacts">Контакты</a>
+    <a href="#objects">Объекты</a><a href="#events">Мероприятия</a><a href="#news">Новости</a><a href="#docs">Документы</a><a href="#about">О компании</a><a href="#contacts">Контакты</a>
     <div class="menu-foot">
       <a class="menu-tel" href="tel:+78442000000">+7 (8442) 00-00-00</a>
       <span class="menu-sub mono">диспетчерская · круглосуточно</span>
@@ -443,6 +453,12 @@ h2.display,h3{text-wrap:balance}
     <div class="mq" id="mq"></div>
   </section>
 
+  <!-- НОВОСТИ -->
+  <section class="news" id="news">
+    <div class="hd"><div><h2 class="display">Новости</h2></div></div>
+    <div class="news-list" id="newsList"></div>
+  </section>
+
   <!-- КОНТАКТЫ / ФУТЕР -->
   <section class="dark foot" data-dark id="contacts">
     <span class="lg" role="img" aria-label="Современный город"></span>
@@ -516,6 +532,19 @@ var PH={"geroi": "UklGRvCWAABXRUJQVlA4IOSWAADwegKdASr4AjoCPok8mkolIyipJTS72SARCW
     return '<a class="tl" href="#zhk-'+z.id+'" data-s="'+st(z)+'" data-ok="'+(z.ok?1:0)+'"><div class="tl-ph">'+media+'<span class="tl-st">'+dot+'<span class="tx">'+lbl+'</span></span></div><div class="tl-bt"><h3>'+z.n+'</h3><p>'+sub+'</p><span class="tl-ar">'+ARR+'</span></div></a>';
   }).join('')+'<a class="tl all" href="#docs"><div class="tl-bt"><h3>Все дома по адресам</h3><p>Реестр на '+TOTAL+' '+hn(TOTAL)+': найдите свой адрес и документы дома</p><span class="tl-ar">'+ARR+'</span></div></a>';
   $('#mq').innerHTML=(function(){var h=EVENTS.map(function(e,i){var ph=e[3]&&PH[e[3]];return '<a class="ev'+(ph?' ph':'')+'" href="#">'+(ph?'<img alt="" loading="lazy" src="data:image/webp;base64,'+PH[e[3]]+'">':'')+'<div class="tp"><span>'+e[1]+'</span>'+(i===0?'<em>ближайшее</em>':'')+'</div><div class="bt"><b>'+e[2]+'</b><div class="d mono-num">'+e[0]+'</div></div></a>'}).join('');return h+h})();
+
+  /* ---------- новости (подгружаются из news.json, редактируются через admin.html) ---------- */
+  (function(){
+    var MON=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+    function fmtDate(s){var m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(s||'');if(!m)return s||'';return +m[3]+' '+MON[+m[2]-1]+' '+m[1]}
+    function render(list){
+      var box=$('#newsList');if(!box)return;
+      if(!list||!list.length){box.outerHTML='<p class="news-empty">Пока новостей нет.</p>';return}
+      list=list.slice().sort(function(a,b){return (b.date||'')<(a.date||'')?-1:1});
+      box.innerHTML=list.map(function(n){return '<div class="news-item"><span class="eyebrow">'+fmtDate(n.date)+'</span><div><h3>'+(n.title||'')+'</h3><p>'+(n.text||'')+'</p></div></div>'}).join('');
+    }
+    fetch('news.json',{cache:'no-store'}).then(function(r){return r.ok?r.json():[]}).then(render).catch(function(){render([])});
+  })();
 
   /* ---------- плашка отключений: показывается, только если есть тревога ---------- */
   var SHOW_ALERT=false; /* временно скрыто по просьбе клиента — чтобы вернуть, поставь true */

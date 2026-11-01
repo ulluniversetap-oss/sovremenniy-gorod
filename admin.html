@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Админка — Новости · Современный город</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0E1011;--card:#1A1D1F;--ink:#EFEFED;--mut:#9AA0A3;--line:rgba(239,239,237,.14);--amber:#D7A33B;--ok:#4C9A6A;--bad:#D15B4F}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Onest',system-ui,sans-serif;min-height:100vh;padding:40px 20px 100px}
+.wrap{max-width:760px;margin:0 auto}
+h1{font-size:22px;font-weight:600;letter-spacing:-.02em;margin:0 0 6px}
+.sub{color:var(--mut);font-size:13px;margin:0 0 32px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px;margin-bottom:20px}
+.card h2{font-size:15px;font-weight:600;margin:0 0 14px}
+label{display:block;font-size:12px;color:var(--mut);margin-bottom:6px}
+input,textarea{width:100%;background:#121516;border:1px solid var(--line);border-radius:8px;color:var(--ink);font:inherit;font-size:14px;padding:10px 12px;margin-bottom:14px}
+textarea{min-height:90px;resize:vertical}
+.row{display:flex;gap:12px}
+.row>div{flex:1}
+button{appearance:none;border:none;border-radius:8px;padding:10px 18px;font:inherit;font-size:14px;font-weight:600;cursor:pointer}
+.btn-pri{background:var(--ink);color:var(--bg)}
+.btn-sec{background:transparent;border:1px solid var(--line);color:var(--ink)}
+.btn-bad{background:transparent;border:1px solid var(--bad);color:var(--bad)}
+.btn-pri:disabled{opacity:.4;cursor:not-allowed}
+.item{display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-top:1px solid var(--line)}
+.item:first-child{border-top:none}
+.item .meta{flex:1;min-width:0}
+.item .d{font-size:12px;color:var(--amber);font-weight:600;margin-bottom:4px}
+.item b{display:block;font-size:15px;margin-bottom:4px}
+.item p{margin:0;font-size:13px;color:var(--mut);white-space:pre-wrap}
+.item .act{display:flex;gap:8px;flex:none}
+.item .act button{padding:6px 10px;font-size:12px}
+.status{font-size:13px;margin-top:10px;min-height:18px}
+.status.ok{color:var(--ok)}
+.status.bad{color:var(--bad)}
+.hint{font-size:12px;color:var(--mut);line-height:1.5}
+.hint a{color:var(--ink)}
+.top-actions{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Новости — админка</h1>
+  <p class="sub">Лёгкая панель для редактирования ленты новостей на сайте (news.json в репозитории). Изменения сразу попадают на сайт после сохранения.</p>
+
+  <div class="card" id="authCard">
+    <h2>Доступ</h2>
+    <label for="tok">GitHub token (personal access token с правом Contents: Read and write на репозиторий sovremenniy-gorod)</label>
+    <input id="tok" type="password" placeholder="ghp_... или github_pat_...">
+    <div class="row">
+      <div><button class="btn-pri" id="saveTok">Войти</button></div>
+      <div><button class="btn-sec" id="clearTok">Выйти / забыть токен</button></div>
+    </div>
+    <p class="hint">Токен хранится только в этом браузере (localStorage) и используется, чтобы сайт мог сам закоммитить правки в GitHub. Создать токен: GitHub → Settings → Developer settings → Personal access tokens → Fine-grained → repo <b>sovremenniy-gorod</b> → permission <b>Contents: Read and write</b>.</p>
+    <div class="status" id="authStatus"></div>
+  </div>
+
+  <div class="card" id="editCard" style="display:none">
+    <h2 id="formTitle">Новая новость</h2>
+    <label for="fDate">Дата</label>
+    <input id="fDate" type="date">
+    <label for="fTitle">Заголовок</label>
+    <input id="fTitle" type="text" placeholder="Например: Изменился график вывоза мусора">
+    <label for="fText">Текст</label>
+    <textarea id="fText" placeholder="Краткое описание новости"></textarea>
+    <div class="row">
+      <div><button class="btn-pri" id="addBtn">Добавить новость</button></div>
+      <div><button class="btn-sec" id="cancelEdit" style="display:none">Отмена</button></div>
+    </div>
+  </div>
+
+  <div class="card" id="listCard" style="display:none">
+    <div class="top-actions">
+      <h2 style="margin:0">Текущие новости</h2>
+      <button class="btn-pri" id="saveAll">Сохранить на сайте</button>
+    </div>
+    <div id="list"></div>
+    <div class="status" id="saveStatus"></div>
+  </div>
+</div>
+
+<script>
+var OWNER='ulluniversetap-oss', REPO='sovremenniy-gorod', PATH='news.json', BRANCH='master';
+var $=function(s){return document.querySelector(s)};
+var token=localStorage.getItem('sg_admin_token')||'';
+var items=[], sha=null, editIndex=-1;
+
+function api(path,opts){
+  opts=opts||{};
+  opts.headers=Object.assign({'Authorization':'token '+token,'Accept':'application/vnd.github+json'},opts.headers||{});
+  return fetch('https://api.github.com'+path,opts).then(function(r){
+    if(!r.ok) return r.json().then(function(e){throw new Error((e&&e.message)||('HTTP '+r.status))});
+    return r.json();
+  });
+}
+function b64encodeUtf8(str){
+  var bytes=new TextEncoder().encode(str),bin='';
+  bytes.forEach(function(b){bin+=String.fromCharCode(b)});
+  return btoa(bin);
+}
+function b64decodeUtf8(b64){
+  var bin=atob(b64.replace(/\n/g,'')),bytes=new Uint8Array(bin.length);
+  for(var i=0;i<bin.length;i++)bytes[i]=bin.charCodeAt(i);
+  return new TextDecoder().decode(bytes);
+}
+
+function setStatus(el,msg,cls){el.textContent=msg;el.className='status'+(cls?' '+cls:'')}
+
+function load(){
+  setStatus($('#authStatus'),'Загружаю…');
+  api('/repos/'+OWNER+'/'+REPO+'/contents/'+PATH+'?ref='+BRANCH).then(function(res){
+    sha=res.sha;
+    try{items=JSON.parse(b64decodeUtf8(res.content))}catch(e){items=[]}
+    setStatus($('#authStatus'),'Готово, вы авторизованы.','ok');
+    $('#editCard').style.display='block';
+    $('#listCard').style.display='block';
+    renderList();
+  }).catch(function(e){
+    setStatus($('#authStatus'),'Ошибка: '+e.message+'. Проверьте токен и права.','bad');
+  });
+}
+
+function renderList(){
+  var box=$('#list');
+  if(!items.length){box.innerHTML='<p class="hint">Новостей нет — добавьте первую выше.</p>';return}
+  var sorted=items.map(function(n,i){return [n,i]}).sort(function(a,b){return (b[0].date||'')<(a[0].date||'')?-1:1});
+  box.innerHTML=sorted.map(function(pair){
+    var n=pair[0],i=pair[1];
+    return '<div class="item"><div class="meta"><div class="d">'+(n.date||'')+'</div><b>'+esc(n.title)+'</b><p>'+esc(n.text)+'</p></div>'+
+      '<div class="act"><button class="btn-sec" data-edit="'+i+'">Править</button><button class="btn-bad" data-del="'+i+'">Удалить</button></div></div>';
+  }).join('');
+}
+function esc(s){return (s||'').replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c]})}
+
+function resetForm(){
+  editIndex=-1;
+  $('#formTitle').textContent='Новая новость';
+  $('#fDate').value='';$('#fTitle').value='';$('#fText').value='';
+  $('#addBtn').textContent='Добавить новость';
+  $('#cancelEdit').style.display='none';
+}
+
+$('#saveTok').addEventListener('click',function(){
+  token=$('#tok').value.trim();
+  if(!token){setStatus($('#authStatus'),'Вставьте токен.','bad');return}
+  localStorage.setItem('sg_admin_token',token);
+  load();
+});
+$('#clearTok').addEventListener('click',function(){
+  localStorage.removeItem('sg_admin_token');token='';items=[];sha=null;
+  $('#editCard').style.display='none';$('#listCard').style.display='none';
+  $('#tok').value='';setStatus($('#authStatus'),'Токен удалён из браузера.');
+});
+
+$('#addBtn').addEventListener('click',function(){
+  var d=$('#fDate').value,t=$('#fTitle').value.trim(),x=$('#fText').value.trim();
+  if(!d||!t){setStatus($('#saveStatus'),'Заполните дату и заголовок.','bad');return}
+  var entry={date:d,title:t,text:x};
+  if(editIndex>=0){items[editIndex]=entry}else{items.push(entry)}
+  resetForm();renderList();
+  setStatus($('#saveStatus'),'Добавлено локально — не забудьте нажать «Сохранить на сайте».');
+});
+$('#cancelEdit').addEventListener('click',resetForm);
+
+$('#list').addEventListener('click',function(e){
+  var ei=e.target.getAttribute('data-edit'),di=e.target.getAttribute('data-del');
+  if(ei!=null){
+    var n=items[+ei];editIndex=+ei;
+    $('#formTitle').textContent='Редактирование новости';
+    $('#fDate').value=n.date||'';$('#fTitle').value=n.title||'';$('#fText').value=n.text||'';
+    $('#addBtn').textContent='Сохранить правку';
+    $('#cancelEdit').style.display='inline-block';
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  if(di!=null){
+    if(confirm('Удалить новость?')){items.splice(+di,1);renderList();setStatus($('#saveStatus'),'Удалено локально — нажмите «Сохранить на сайте».')}
+  }
+});
+
+$('#saveAll').addEventListener('click',function(){
+  setStatus($('#saveStatus'),'Сохраняю…');
+  var content=b64encodeUtf8(JSON.stringify(items,null,2));
+  api('/repos/'+OWNER+'/'+REPO+'/contents/'+PATH,{
+    method:'PUT',
+    body:JSON.stringify({message:'Обновление новостей через admin.html',content:content,sha:sha,branch:BRANCH})
+  }).then(function(res){
+    sha=res.content.sha;
+    setStatus($('#saveStatus'),'Сохранено. Сайт обновится за 1-2 минуты (GitHub Pages).','ok');
+  }).catch(function(e){
+    setStatus($('#saveStatus'),'Ошибка сохранения: '+e.message,'bad');
+  });
+});
+
+if(token){$('#tok').value=token;load()}
+</script>
+</body>
+</html>
