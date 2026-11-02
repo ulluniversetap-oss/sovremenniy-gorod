@@ -578,7 +578,7 @@ html,body{background:var(--dk)}
   /* ---------- карточки ---------- */
   function card(e){
     var d=P(e.date);
-    return '<a class="nc" href="#" data-id="'+e.id+'"><div class="tp"><span class="dt">'+d.getDate()+' '+MONG[d.getMonth()]+'</span><em class="tg">'+esc(NAME[e.z]||'Все ЖК')+'</em></div>'+
+    return '<a class="nc" href="news-item.html?id='+e.id+'"><div class="tp"><span class="dt">'+d.getDate()+' '+MONG[d.getMonth()]+'</span><em class="tg">'+esc(NAME[e.z]||'Все ЖК')+'</em></div>'+
       '<div class="tx"><h3>'+esc(e.t)+'</h3><p>'+esc(e.tx)+'</p></div><span class="ar">'+ARW+'</span></a>';
   }
 
@@ -626,8 +626,7 @@ html,body{background:var(--dk)}
   }
   pills.addEventListener('click',function(e){var b=e.target.closest('.pill');if(b)setState(b.dataset.z,null)});
   $('#rs').addEventListener('click',function(){setState('all',null)});
-  listEl.addEventListener('click',function(e){if(e.target.closest('.nc'))e.preventDefault()});
-
+  
   function init(data){
     EV=(data||[]).map(function(n,i){return {id:i,date:n.date,z:n.complex||'all',t:n.title,tx:n.text}});
     buildPills();

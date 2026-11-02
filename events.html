@@ -584,7 +584,7 @@ html,body{background:var(--dk)}
     var d=P(e.date),all=e.z==='all',lab=all?'Во всех дворах':NAME[e.z];
     var ph=all?'':'<img src="zhk-photos/'+e.z+'.webp" alt="" loading="lazy">';
     var pillTag=(first&&state.p==='up')?'<em>ближайшее</em>':'';
-    return '<a class="card'+(all?' all':'')+'" href="#" data-id="'+e.id+'">'+ph+
+    return '<a class="card'+(all?' all':'')+'" href="event.html?id='+e.id+'">'+ph+
       '<div class="tp"><span>'+esc(lab)+'</span>'+pillTag+'</div>'+
       '<div class="bt"><div class="d mono">'+String(d.getDate()).padStart(2,'0')+'<small>'+DOW[d.getDay()]+'</small></div>'+
       '<h3>'+esc(e.t)+'</h3><span class="tm">'+e.time+' · '+esc(e.place)+'</span></div>'+
@@ -650,8 +650,7 @@ html,body{background:var(--dk)}
   }
   pills.addEventListener('click',function(e){var b=e.target.closest('.pill');if(b)setState(b.dataset.z,null)});
   $('#rs').addEventListener('click',function(){setState('all',null)});
-  listEl.addEventListener('click',function(e){if(e.target.closest('.card'))e.preventDefault()});
-
+  
   buildPills();
   render(false);
 

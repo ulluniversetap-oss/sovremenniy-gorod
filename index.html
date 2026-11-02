@@ -523,9 +523,9 @@ h2.display,h3{text-wrap:balance}
   var TOTAL=ZHK.reduce(function(s,z){return s+z.h},0),READY=ZHK.reduce(function(s,z){return s+(z.ok?z.h:0)},0);
   function hn(n){var m=n%10,h=n%100;return (m===1&&h!==11?'дом':(m>=2&&m<=4&&(h<10||h>=20))?'дома':'домов')}
   var EVENTS=[
-    ['02.11','Северный','Встреча жителей с управляющим','severny'],['09.11','Зенит','День открытых подвалов','zenit'],
-    ['16.11','Герои поколений','Осенняя ярмарка во дворе','geroi'],['30.11','Берег Волги','Мастер-класс для детей','bereg'],
-    ['27.12','Все ЖК','Новогодний праздник во дворах','']
+    ['02.11','Северный','Встреча жителей с управляющим','severny',0],['09.11','Зенит','День открытых подвалов','zenit',1],
+    ['16.11','Герои поколений','Осенняя ярмарка во дворе','geroi',2],['30.11','Берег Волги','Мастер-класс для детей','bereg',4],
+    ['27.12','Все ЖК','Новогодний праздник во дворах','',8]
   ];
   function ringIcon(ok){return '<svg viewBox="0 0 100 100" fill="none"><path d="M58.8 88 A39 39 0 1 0 41.2 88" stroke="'+(ok?'var(--ok)':'var(--amber)')+'" stroke-width="'+(ok?22:16)+'"'+(ok?'':' stroke-dasharray="14 9"')+'/></svg>'}
   function facade(f,s,seed){
@@ -550,7 +550,7 @@ var PH={"geroi": "UklGRvCWAABXRUJQVlA4IOSWAADwegKdASr4AjoCPok8mkolIyipJTS72SARCW
     var media=PH[z.id]?'<img alt="ЖК «'+z.n+'»" loading="lazy" src="data:image/webp;base64,'+PH[z.id]+'">':facade(z.f,z.s,i);
     return '<a class="tl" href="#zhk-'+z.id+'" data-s="'+st(z)+'" data-ok="'+(z.ok?1:0)+'"><div class="tl-ph">'+media+'<span class="tl-st">'+dot+'<span class="tx">'+lbl+'</span></span></div><div class="tl-bt"><h3>'+z.n+'</h3><p>'+sub+'</p><span class="tl-ar">'+ARR+'</span></div></a>';
   }).join('')+'<a class="tl all" href="#docs"><div class="tl-bt"><h3>Все дома по адресам</h3><p>Реестр на '+TOTAL+' '+hn(TOTAL)+': найдите свой адрес и документы дома</p><span class="tl-ar">'+ARR+'</span></div></a>';
-  $('#mq').innerHTML=(function(){var h=EVENTS.map(function(e,i){var ph=e[3]&&PH[e[3]];return '<a class="ev'+(ph?' ph':'')+'" href="#">'+(ph?'<img alt="" loading="lazy" src="data:image/webp;base64,'+PH[e[3]]+'">':'')+'<div class="tp"><span>'+e[1]+'</span>'+(i===0?'<em>ближайшее</em>':'')+'</div><div class="bt"><b>'+e[2]+'</b><div class="d mono-num">'+e[0]+'</div><span class="ev-ar"><svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12 12 4M5 4h7v7"/></svg></span></div></a>'}).join('');return h+h})();
+  $('#mq').innerHTML=(function(){var h=EVENTS.map(function(e,i){var ph=e[3]&&PH[e[3]];return '<a class="ev'+(ph?' ph':'')+'" href="event.html?id='+e[4]+'">'+(ph?'<img alt="" loading="lazy" src="data:image/webp;base64,'+PH[e[3]]+'">':'')+'<div class="tp"><span>'+e[1]+'</span>'+(i===0?'<em>ближайшее</em>':'')+'</div><div class="bt"><b>'+e[2]+'</b><div class="d mono-num">'+e[0]+'</div><span class="ev-ar"><svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12 12 4M5 4h7v7"/></svg></span></div></a>'}).join('');return h+h})();
 
   /* ---------- новости (подгружаются из news.json, редактируются через admin.html) ---------- */
   (function(){
@@ -563,9 +563,9 @@ var PH={"geroi": "UklGRvCWAABXRUJQVlA4IOSWAADwegKdASr4AjoCPok8mkolIyipJTS72SARCW
     function render(list){
       var box=$('#nw');if(!box)return;
       if(!list||!list.length){box.outerHTML='<p class="nw-empty">Пока новостей нет.</p>';return}
-      list=list.slice().sort(function(a,b){return (b.date||'')<(a.date||'')?-1:1}).slice(0,3);
+      list=list.map(function(n,i){return Object.assign({},n,{id:i})}).sort(function(a,b){return (b.date||'')<(a.date||'')?-1:1}).slice(0,3);
       box.className='nw n'+list.length;
-      box.innerHTML=list.map(function(n){return '<a href="news.html"><div class="tp"><span class="dt">'+fd(n.date)+'</span><em class="tg">'+esc(tag(n.complex))+'</em></div><div class="tx"><h3>'+esc(n.title)+'</h3><p>'+esc(n.text)+'</p></div><span class="ar">'+AR+'</span></a>'}).join('');
+      box.innerHTML=list.map(function(n){return '<a href="news-item.html?id='+n.id+'"><div class="tp"><span class="dt">'+fd(n.date)+'</span><em class="tg">'+esc(tag(n.complex))+'</em></div><div class="tx"><h3>'+esc(n.title)+'</h3><p>'+esc(n.text)+'</p></div><span class="ar">'+AR+'</span></a>'}).join('');
     }
     fetch('news.json',{cache:'no-store'}).then(function(r){return r.ok?r.json():[]}).then(render).catch(function(){render([])});
   })();
