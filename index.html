@@ -315,14 +315,18 @@ h2.display,h3{text-wrap:balance}
 .ev{position:relative;flex:none;width:clamp(260px,23vw,330px);aspect-ratio:4/5;margin-right:12px;overflow:hidden;isolation:isolate;display:flex;flex-direction:column;justify-content:space-between;padding:20px;background:var(--slot);color:var(--ink)}
 .ev img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;filter:brightness(.75) contrast(1.05);transition:filter .7s var(--ease),transform 1.1s var(--ease)}
 .ev.ph{color:#EFEFED}
-.ev.ph::after{content:'';position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(10,12,13,.6),rgba(10,12,13,0) 42%,rgba(10,12,13,.72))}
+.ev.ph::after{content:'';position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(10,12,13,.72) 0%,rgba(10,12,13,.18) 36%,rgba(10,12,13,.92) 100%)}
 .ev:hover img{filter:brightness(.82);transform:scale(1.05)}
 .ev .tp{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;font-size:12px}
 .ev .tp span{opacity:.8}
 .ev .tp em{font-style:normal;font-size:11px;padding:4px 9px;border:1px solid currentColor;border-radius:999px;opacity:.9;white-space:nowrap}
-.ev b{display:block;font-weight:300;font-size:clamp(19px,1.7vw,24px);letter-spacing:-.03em;line-height:1.15;margin-top:12px;max-width:16ch}
+.ev b{display:block;font-weight:300;font-size:clamp(16px,1.4vw,20px);letter-spacing:-.03em;line-height:1.15;margin-top:12px;max-width:16ch}
 .ev .d{font-size:clamp(50px,5.2vw,80px);font-weight:300;letter-spacing:-.06em;line-height:.9}
-.ev .bt{display:flex;flex-direction:column;gap:18px}
+.ev .bt{display:flex;flex-direction:column;gap:14px}
+.ev-more{align-self:flex-start;display:inline-flex;align-items:center;gap:6px;font-size:12px;padding:8px 14px;border:1px solid currentColor;border-radius:999px;opacity:.85;transition:background .3s,color .3s,opacity .3s}
+.ev:hover .ev-more{opacity:1}
+.ev.ph:hover .ev-more{background:#EFEFED;color:#16191B}
+.ev:not(.ph):hover .ev-more{background:#16191B;color:#EFEFED}
 @media(prefers-reduced-motion:reduce){.mq{animation:none;overflow-x:auto;width:auto}}
 @media(max-width:700px){.events .hd{flex-wrap:wrap;align-items:flex-start;gap:20px}}
 
@@ -531,7 +535,7 @@ var PH={"geroi": "UklGRvCWAABXRUJQVlA4IOSWAADwegKdASr4AjoCPok8mkolIyipJTS72SARCW
     var media=PH[z.id]?'<img alt="ЖК «'+z.n+'»" loading="lazy" src="data:image/webp;base64,'+PH[z.id]+'">':facade(z.f,z.s,i);
     return '<a class="tl" href="#zhk-'+z.id+'" data-s="'+st(z)+'" data-ok="'+(z.ok?1:0)+'"><div class="tl-ph">'+media+'<span class="tl-st">'+dot+'<span class="tx">'+lbl+'</span></span></div><div class="tl-bt"><h3>'+z.n+'</h3><p>'+sub+'</p><span class="tl-ar">'+ARR+'</span></div></a>';
   }).join('')+'<a class="tl all" href="#docs"><div class="tl-bt"><h3>Все дома по адресам</h3><p>Реестр на '+TOTAL+' '+hn(TOTAL)+': найдите свой адрес и документы дома</p><span class="tl-ar">'+ARR+'</span></div></a>';
-  $('#mq').innerHTML=(function(){var h=EVENTS.map(function(e,i){var ph=e[3]&&PH[e[3]];return '<a class="ev'+(ph?' ph':'')+'" href="#">'+(ph?'<img alt="" loading="lazy" src="data:image/webp;base64,'+PH[e[3]]+'">':'')+'<div class="tp"><span>'+e[1]+'</span>'+(i===0?'<em>ближайшее</em>':'')+'</div><div class="bt"><b>'+e[2]+'</b><div class="d mono-num">'+e[0]+'</div></div></a>'}).join('');return h+h})();
+  $('#mq').innerHTML=(function(){var h=EVENTS.map(function(e,i){var ph=e[3]&&PH[e[3]];return '<a class="ev'+(ph?' ph':'')+'" href="#">'+(ph?'<img alt="" loading="lazy" src="data:image/webp;base64,'+PH[e[3]]+'">':'')+'<div class="tp"><span>'+e[1]+'</span>'+(i===0?'<em>ближайшее</em>':'')+'</div><div class="bt"><b>'+e[2]+'</b><div class="d mono-num">'+e[0]+'</div><span class="ev-more">Смотреть подробнее <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M2 9L9 2M9 2H3.5M9 2V7.5" stroke="currentColor" stroke-width="1.3"/></svg></span></div></a>'}).join('');return h+h})();
 
   /* ---------- новости (подгружаются из news.json, редактируются через admin.html) ---------- */
   (function(){
