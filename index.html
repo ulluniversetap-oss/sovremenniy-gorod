@@ -468,13 +468,13 @@ h2.display,h3{text-wrap:balance}
 
   <!-- СОБЫТИЯ -->
   <section class="events" id="events">
-    <div class="hd"><div><h2 class="display">Что во дворах</h2></div><a class="btn" href="#"><b>Все мероприятия</b><i><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12 12 4M5 4h7v7"/></svg></i></a></div>
+    <div class="hd"><div><h2 class="display">Что во дворах</h2></div><a class="btn" href="events.html"><b>Все мероприятия</b><i><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12 12 4M5 4h7v7"/></svg></i></a></div>
     <div class="mq" id="mq"></div>
   </section>
 
   <!-- НОВОСТИ -->
   <section class="news" id="news">
-    <div class="hd"><div><h2 class="display">Новости</h2></div><a class="btn" href="#news"><b>Все новости</b><i><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12 12 4M5 4h7v7"/></svg></i></a></div>
+    <div class="hd"><div><h2 class="display">Новости</h2></div><a class="btn" href="news.html"><b>Все новости</b><i><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12 12 4M5 4h7v7"/></svg></i></a></div>
     <div class="nw" id="nw"></div>
   </section>
 
@@ -565,7 +565,7 @@ var PH={"geroi": "UklGRvCWAABXRUJQVlA4IOSWAADwegKdASr4AjoCPok8mkolIyipJTS72SARCW
       if(!list||!list.length){box.outerHTML='<p class="nw-empty">Пока новостей нет.</p>';return}
       list=list.slice().sort(function(a,b){return (b.date||'')<(a.date||'')?-1:1}).slice(0,3);
       box.className='nw n'+list.length;
-      box.innerHTML=list.map(function(n){return '<a href="#news"><div class="tp"><span class="dt">'+fd(n.date)+'</span><em class="tg">'+esc(tag(n.complex))+'</em></div><div class="tx"><h3>'+esc(n.title)+'</h3><p>'+esc(n.text)+'</p></div><span class="ar">'+AR+'</span></a>'}).join('');
+      box.innerHTML=list.map(function(n){return '<a href="news.html"><div class="tp"><span class="dt">'+fd(n.date)+'</span><em class="tg">'+esc(tag(n.complex))+'</em></div><div class="tx"><h3>'+esc(n.title)+'</h3><p>'+esc(n.text)+'</p></div><span class="ar">'+AR+'</span></a>'}).join('');
     }
     fetch('news.json',{cache:'no-store'}).then(function(r){return r.ok?r.json():[]}).then(render).catch(function(){render([])});
   })();
