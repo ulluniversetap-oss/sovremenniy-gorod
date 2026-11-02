@@ -323,10 +323,11 @@ h2.display,h3{text-wrap:balance}
 .ev b{display:block;font-weight:300;font-size:clamp(16px,1.4vw,20px);letter-spacing:-.03em;line-height:1.15;margin-top:12px;max-width:16ch}
 .ev .d{font-size:clamp(50px,5.2vw,80px);font-weight:300;letter-spacing:-.06em;line-height:.9}
 .ev .bt{display:flex;flex-direction:column;gap:14px}
-.ev .btn{height:36px;font-size:12px;align-self:flex-start}
-.ev .btn b{padding:0 14px}
-.ev .btn i{width:36px}
-.ev .btn i svg{width:12px;height:12px}
+.ev-more{align-self:flex-start;display:inline-flex;align-items:center;gap:10px;font-size:12px}
+.ev-more .ar{width:32px;height:32px;display:grid;place-items:center;border:1px solid currentColor;border-radius:50%;transition:background .3s,color .3s}
+.ev-more .ar svg{width:12px;height:12px;transition:transform .45s var(--ease)}
+.ev:hover .ev-more .ar{background:var(--ink);color:var(--bg)}
+.ev:hover .ev-more .ar svg{transform:rotate(45deg)}
 @media(prefers-reduced-motion:reduce){.mq{animation:none;overflow-x:auto;width:auto}}
 @media(max-width:700px){.events .hd{flex-wrap:wrap;align-items:flex-start;gap:20px}}
 
@@ -535,7 +536,7 @@ var PH={"geroi": "UklGRvCWAABXRUJQVlA4IOSWAADwegKdASr4AjoCPok8mkolIyipJTS72SARCW
     var media=PH[z.id]?'<img alt="ЖК «'+z.n+'»" loading="lazy" src="data:image/webp;base64,'+PH[z.id]+'">':facade(z.f,z.s,i);
     return '<a class="tl" href="#zhk-'+z.id+'" data-s="'+st(z)+'" data-ok="'+(z.ok?1:0)+'"><div class="tl-ph">'+media+'<span class="tl-st">'+dot+'<span class="tx">'+lbl+'</span></span></div><div class="tl-bt"><h3>'+z.n+'</h3><p>'+sub+'</p><span class="tl-ar">'+ARR+'</span></div></a>';
   }).join('')+'<a class="tl all" href="#docs"><div class="tl-bt"><h3>Все дома по адресам</h3><p>Реестр на '+TOTAL+' '+hn(TOTAL)+': найдите свой адрес и документы дома</p><span class="tl-ar">'+ARR+'</span></div></a>';
-  $('#mq').innerHTML=(function(){var h=EVENTS.map(function(e,i){var ph=e[3]&&PH[e[3]];return '<a class="ev'+(ph?' ph':'')+'" href="#">'+(ph?'<img alt="" loading="lazy" src="data:image/webp;base64,'+PH[e[3]]+'">':'')+'<div class="tp"><span>'+e[1]+'</span>'+(i===0?'<em>ближайшее</em>':'')+'</div><div class="bt"><b>'+e[2]+'</b><div class="d mono-num">'+e[0]+'</div><span class="btn'+(ph?' lt':'')+'"><b>Подробнее</b><i><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12 12 4M5 4h7v7"/></svg></i></span></div></a>'}).join('');return h+h})();
+  $('#mq').innerHTML=(function(){var h=EVENTS.map(function(e,i){var ph=e[3]&&PH[e[3]];return '<a class="ev'+(ph?' ph':'')+'" href="#">'+(ph?'<img alt="" loading="lazy" src="data:image/webp;base64,'+PH[e[3]]+'">':'')+'<div class="tp"><span>'+e[1]+'</span>'+(i===0?'<em>ближайшее</em>':'')+'</div><div class="bt"><b>'+e[2]+'</b><div class="d mono-num">'+e[0]+'</div><span class="ev-more">Подробнее<span class="ar"><svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12 12 4M5 4h7v7"/></svg></span></span></div></a>'}).join('');return h+h})();
 
   /* ---------- новости (подгружаются из news.json, редактируются через admin.html) ---------- */
   (function(){
