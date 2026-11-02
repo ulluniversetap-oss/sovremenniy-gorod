@@ -1,0 +1,79 @@
+:root {
+  --ink: #16191b;
+  --bg: #f2f2f0;
+  --bg-light: #efefed;
+  --ok: #3e7c5a;
+  --amber: #ffb000;
+  --line: rgba(22, 25, 27, 0.14);
+  --mut: #6b6f71;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Onest', system-ui, sans-serif;
+  font-weight: 400;
+}
+
+a {
+  color: inherit;
+}
+
+.home {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 24px;
+  padding: 40px 20px;
+}
+
+.home h1 {
+  font-size: clamp(24px, 4vw, 40px);
+  font-weight: 300;
+  letter-spacing: -0.03em;
+  margin: 0;
+  max-width: 640px;
+}
+
+.home p {
+  color: var(--mut);
+  max-width: 480px;
+  margin: 0;
+}
+
+.links {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.links a {
+  text-decoration: none;
+  padding: 12px 22px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.links a.primary {
+  background: var(--ink);
+  color: var(--bg);
+}
+
+.links a.secondary {
+  border: 1px solid var(--line);
+}
