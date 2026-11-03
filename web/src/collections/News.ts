@@ -57,7 +57,8 @@ export const News: CollectionConfig = {
     {
       name: 'text',
       type: 'textarea',
-      label: 'Текст',
+      label: 'Короткий текст (для карточки на главной)',
+      required: true,
     },
     {
       name: 'cover',
@@ -65,6 +66,76 @@ export const News: CollectionConfig = {
       relationTo: 'media',
       label: 'Фото',
       required: false,
+    },
+    {
+      name: 'lead',
+      type: 'textarea',
+      label: 'Лид (вступление на странице новости)',
+      admin: {
+        description: 'Необязательно. Если не заполнить — на странице новости покажется короткий текст выше.',
+      },
+    },
+    {
+      name: 'body',
+      type: 'array',
+      label: 'Текст статьи',
+      labels: { singular: 'Абзац', plural: 'Абзацы' },
+      fields: [
+        {
+          name: 'text',
+          type: 'textarea',
+          label: 'Абзац',
+          required: true,
+        },
+      ],
+    },
+    {
+      name: 'highlightTitle',
+      type: 'text',
+      label: 'Заголовок врезки',
+      admin: {
+        description: 'Например «Если батареи остались холодными». Необязательно.',
+      },
+    },
+    {
+      name: 'highlightList',
+      type: 'array',
+      label: 'Пункты врезки',
+      labels: { singular: 'Пункт', plural: 'Пункты' },
+      fields: [
+        {
+          name: 'item',
+          type: 'text',
+          label: 'Пункт',
+          required: true,
+        },
+      ],
+    },
+    {
+      name: 'files',
+      type: 'array',
+      label: 'Прикреплённые файлы',
+      labels: { singular: 'Файл', plural: 'Файлы' },
+      fields: [
+        {
+          name: 'label',
+          type: 'text',
+          label: 'Название',
+          required: true,
+        },
+        {
+          name: 'meta',
+          type: 'text',
+          label: 'Подпись (например «PDF · 240 КБ»)',
+        },
+        {
+          name: 'file',
+          type: 'upload',
+          relationTo: 'media',
+          label: 'Файл',
+          required: true,
+        },
+      ],
     },
   ],
 }

@@ -11,7 +11,7 @@ export default async function EventsPage() {
   const payload = await getPayload({ config: payloadConfig })
 
   const { docs } = await payload.find({
-    collection: 'news',
+    collection: 'events',
     sort: '-date',
     limit: 200,
   })
@@ -22,6 +22,7 @@ export default async function EventsPage() {
     date: doc.date,
     complex: doc.complex,
     text: doc.text ?? '',
+    place: doc.place ?? '',
   }))
 
   return (

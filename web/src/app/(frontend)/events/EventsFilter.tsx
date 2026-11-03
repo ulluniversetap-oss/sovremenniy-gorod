@@ -2,17 +2,18 @@
 
 import { useMemo, useState } from 'react'
 
-type NewsItem = {
+type EventItem = {
   id: string
   title: string
   date: string
   complex: string
   text: string
+  place?: string
 }
 
 type Option = { label: string; value: string }
 
-export function EventsFilter({ items, options }: { items: NewsItem[]; options: Option[] }) {
+export function EventsFilter({ items, options }: { items: EventItem[]; options: Option[] }) {
   const [active, setActive] = useState('all')
 
   const filtered = useMemo(() => {
@@ -46,7 +47,7 @@ export function EventsFilter({ items, options }: { items: NewsItem[]; options: O
       </div>
 
       {filtered.length === 0 ? (
-        <p style={{ color: '#6b6f71' }}>Пока нет новостей для выбранного фильтра.</p>
+        <p style={{ color: '#6b6f71' }}>Пока нет мероприятий для выбранного фильтра.</p>
       ) : (
         <div>
           {filtered.map((item) => (
@@ -63,6 +64,7 @@ export function EventsFilter({ items, options }: { items: NewsItem[]; options: O
                 }}
               >
                 {new Date(item.date).toLocaleDateString('ru-RU')} · {labelFor(item.complex)}
+                {item.place ? ' · ' + item.place : ''}
               </div>
               <h3 style={{ margin: '0 0 6px', fontSize: 17, fontWeight: 500 }}>{item.title}</h3>
               {item.text ? (
