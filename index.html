@@ -74,16 +74,17 @@ nav.main{display:flex;gap:clamp(18px,2.6vw,40px);font-size:14px;font-weight:400}
 .menu-open .hd-r .ph{visibility:hidden}
 @media(max-width:520px){.hd-r .ph{display:none}.lg{height:28px}}
 .menu{position:fixed;inset:0;z-index:58;background:var(--dk);color:var(--dki);display:none;flex-direction:column;justify-content:center;gap:6px;padding:0 var(--gx) 48px}
-.menu.open{display:flex}.menu a{font-size:clamp(40px,12vw,84px);letter-spacing:-.05em;line-height:1.05;font-weight:300}
+.menu.open{display:flex}.menu a{font-size:clamp(28px,8.4vw,59px);letter-spacing:-.05em;line-height:1.05;font-weight:300}
 .menu-foot{margin-top:auto;padding-top:28px;border-top:1px solid var(--dkl);display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
 .menu-tel{font-size:clamp(20px,2.4vw,26px);font-weight:500;letter-spacing:-.01em}
 .menu-sub{font-size:13px;color:var(--dkm)}
+.menu-lead{margin-top:20px}
 .menu-scrim{position:fixed;inset:0;z-index:57;background:rgba(14,16,17,.5);opacity:0;pointer-events:none;transition:opacity .4s}
 .menu-scrim.show{opacity:1;pointer-events:auto}
 @media(min-width:901px){
   .menu{display:flex;inset:auto;top:0;right:0;bottom:0;left:auto;width:30vw;min-width:380px;max-width:560px;padding:140px 48px 48px;justify-content:flex-start;transform:translateX(100%);visibility:hidden;box-shadow:-60px 0 100px rgba(0,0,0,.35);transition:transform .5s cubic-bezier(.16,1,.3,1),visibility 0s .5s linear}
   .menu.open{transform:translateX(0);visibility:visible;transition:transform .5s cubic-bezier(.16,1,.3,1)}
-  .menu a{font-size:clamp(32px,3.4vw,52px)}
+  .menu a{font-size:clamp(22px,2.4vw,36px)}
 }
 .hd-r .sq{cursor:pointer}
 
@@ -417,6 +418,7 @@ h2.display,h3{text-wrap:balance}
       <a class="menu-tel" href="tel:+78442000000">+7 (8442) 00-00-00</a>
       <span class="menu-sub mono">диспетчерская · круглосуточно</span>
     </div>
+    <button class="btn lt menu-lead" id="leadBtnMenu" type="button"><b>Оставить заявку</b><i><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12 12 4M5 4h7v7"/></svg></i></button>
   </div>
 
   <!-- HERO -->
@@ -650,7 +652,7 @@ var PH={"geroi": "UklGRvCWAABXRUJQVlA4IOSWAADwegKdASr4AjoCPok8mkolIyipJTS72SARCW
   $$('a',menu).forEach(function(a){a.addEventListener('click',closeMenu)});
 
   /* ---------- заявка ---------- */
-  var leadBtn=$('#leadBtn'),leadModal=$('#leadModal'),leadScrim=$('#leadScrim'),leadClose=$('#leadClose'),leadForm=$('#leadForm'),leadOk=$('#leadOk'),leadOkClose=$('#leadOkClose');
+  var leadBtn=$('#leadBtn'),leadBtnMenu=$('#leadBtnMenu'),leadModal=$('#leadModal'),leadScrim=$('#leadScrim'),leadClose=$('#leadClose'),leadForm=$('#leadForm'),leadOk=$('#leadOk'),leadOkClose=$('#leadOkClose');
   var ZHKN={geroi:'Герои поколений',novy:'Новый',semeyny:'Семейный',severny:'Северный',bereg:'Берег Волги',zenit:'Зенит',granat:'Гранат',tarifnaya:'Тарифная',gvard35:'На 35‑й Гвардейской',atlasova:'Атласова'};
   function openLead(){
     leadScrim.classList.add('show');leadModal.classList.add('show');leadModal.setAttribute('aria-hidden','false');
@@ -660,6 +662,7 @@ var PH={"geroi": "UklGRvCWAABXRUJQVlA4IOSWAADwegKdASr4AjoCPok8mkolIyipJTS72SARCW
   function closeLead(){leadScrim.classList.remove('show');leadModal.classList.remove('show');leadModal.setAttribute('aria-hidden','true')}
   if(leadBtn){
     leadBtn.addEventListener('click',openLead);
+    if(leadBtnMenu)leadBtnMenu.addEventListener('click',function(){closeMenu();openLead()});
     leadScrim.addEventListener('click',closeLead);
     leadClose.addEventListener('click',closeLead);
     leadOkClose.addEventListener('click',closeLead);
