@@ -724,10 +724,10 @@ var PH={"geroi": "UklGRnBpBABXRUJQVlA4IGRpBAAwAxCdASrxBjUFPjEYiUOiIaEjI/OrEGAGCW
 
   /* ---------- вход героя ---------- */
   if(!reduce){
-    gsap.from('.hero .ln>span',{yPercent:112,duration:1.2,ease:'expo.out',stagger:.14,delay:.1});
+    gsap.from('.hero .ln>span',{yPercent:112,duration:1.2,ease:'expo.out',stagger:.14,delay:.1,clearProps:'transform'});setTimeout(function(){gsap.set('.hero .ln>span',{clearProps:'all'})},2000);
     /* купол «заполняется» этаж за этажом: дом работает */
     gsap.from('.hero .dial,.hero .sub,.hero .stats',{opacity:0,y:24,duration:1,delay:.9,stagger:.12,ease:'power2.out',clearProps:'opacity,transform',onComplete:function(){gsap.set('.hero .dial,.hero .sub,.hero .stats',{clearProps:'all'})}});setTimeout(function(){gsap.set('.hero .dial,.hero .sub,.hero .stats',{clearProps:'all'})},2500);
-    gsap.from('header.top',{opacity:0,y:-14,duration:.9,delay:.3});
+    gsap.from('header.top',{opacity:0,y:-14,duration:.9,delay:.3,clearProps:'opacity,transform'});setTimeout(function(){gsap.set('header.top',{clearProps:'all'})},2000);
     $$('.rv').forEach(function(el){gsap.from(el,{y:46,opacity:0,duration:1,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 88%',once:true}})});
   }
 
