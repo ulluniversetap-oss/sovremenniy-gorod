@@ -106,6 +106,30 @@ header.top::before{content:'';position:absolute;left:0;right:0;top:0;bottom:0;ba
 .btn i svg{width:16px;height:16px;transition:transform .4s var(--ease)}
 .btn:hover i{background:var(--ink);color:var(--bg)}.btn:hover i svg{transform:rotate(45deg)}
 .btn.lt b{background:var(--dki);color:var(--dk)}.btn.lt i{background:rgba(239,239,237,.2);color:var(--dki)}.btn.lt:hover i{background:var(--dki);color:var(--dk)}
+.btn.ghost b{background:transparent;color:var(--dki);border:1px solid rgba(239,239,237,.4)}.btn.ghost i{background:rgba(239,239,237,.08)}.btn.ghost:hover b{background:rgba(239,239,237,.1)}.btn.ghost:hover i{background:var(--dki);color:var(--dk)}
+
+/* ---------- заявка (модалка) ---------- */
+.lead-scrim{position:fixed;inset:0;z-index:79;background:rgba(14,16,17,.6);opacity:0;pointer-events:none;transition:opacity .35s}
+.lead-scrim.show{opacity:1;pointer-events:auto}
+.lead-modal{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%) translateY(10px) scale(.98);z-index:80;width:min(460px,calc(100vw - var(--gx)*2));max-height:calc(100svh - 48px);overflow:auto;background:var(--card);color:var(--ink);padding:clamp(28px,4vw,40px);opacity:0;pointer-events:none;transition:opacity .35s,transform .35s var(--ease)}
+.lead-modal.show{opacity:1;pointer-events:auto;transform:translate(-50%,-50%) translateY(0) scale(1)}
+.lead-modal h2{font-size:clamp(24px,2.6vw,30px);line-height:1.05;margin-bottom:10px}
+.lead-modal p.sub{font-size:14px;line-height:1.4;color:var(--mut);margin-bottom:28px;max-width:40ch}
+.lead-close{position:absolute;top:20px;right:20px;width:32px;height:32px;display:grid;place-items:center;color:var(--mut);transition:color .25s}
+.lead-close:hover{color:var(--ink)}
+.lead-close svg{width:14px;height:14px}
+.lf label{display:block;font-size:12px;color:var(--mut);margin-bottom:6px}
+.lf input,.lf select,.lf textarea{display:block;width:100%;background:transparent;border:0;border-bottom:1px solid var(--line);border-radius:0;color:var(--ink);font:inherit;font-size:15px;padding:8px 0;margin-bottom:22px;transition:border-color .25s;-webkit-appearance:none;appearance:none}
+.lf select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%236B7073' stroke-width='1.4'%3E%3Cpath d='m4 6 4 4 4-4'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 2px center}
+.lf textarea{min-height:64px;resize:vertical}
+.lf input:focus,.lf select:focus,.lf textarea:focus{outline:none;border-color:var(--ink)}
+.lf input::placeholder,.lf textarea::placeholder{color:var(--mut)}
+.lf .btn{width:100%;margin-top:4px}.lf .btn b{flex:1;justify-content:center}
+.lf .fine{font-size:11px;color:var(--mut);margin-top:14px;line-height:1.4}
+.lead-ok{display:none;text-align:center;padding:12px 0 4px}
+.lead-ok.show{display:block}
+.lead-ok p{font-size:14px;line-height:1.5;color:var(--mut);margin-bottom:26px}
+.lead-ok .btn{display:inline-flex;margin:0 auto}
 
 /* ---------- hero ---------- */
 .hero{position:relative;min-height:100svh;padding:clamp(140px,11vw,180px) var(--gx) 110px;overflow:hidden}
@@ -118,7 +142,7 @@ header.top::before{content:'';position:absolute;left:0;right:0;top:0;bottom:0;ba
 /* поиск дома по адресу */
 .hero .sub{position:absolute;left:calc(var(--gx) + min(400px,31vw));bottom:64px;width:min(640px,calc(100vw - var(--gx)*2 - min(400px,31vw) - 258px));font-size:clamp(16px,1.5vw,21px);line-height:1.3;letter-spacing:-.015em;color:var(--ink);z-index:2}
 .hero .sub p{margin:0;line-height:1.3}.hero .sub p span{color:var(--mut)}
-.hero .dial{position:absolute;left:var(--gx);bottom:64px;z-index:2;display:flex;flex-direction:column;gap:12px;align-items:flex-start}
+.hero .dial{position:absolute;left:var(--gx);bottom:64px;z-index:2;display:flex;flex-direction:row;flex-wrap:wrap;gap:12px;align-items:flex-start;max-width:min(560px,calc(100vw - var(--gx)*2))}
 .hero .dial .tel{font-size:clamp(20px,2.4vw,30px);letter-spacing:-.01em;font-weight:500;white-space:nowrap}
 .hero .stats{position:absolute;right:var(--gx);bottom:60px;width:210px;z-index:2;display:flex;flex-direction:column;gap:clamp(22px,2.4vw,34px);align-items:flex-start;text-align:left;margin:0}
 .hero .stats::before,.hero .stats::after{content:'';position:absolute;background:var(--line);pointer-events:none}
@@ -413,11 +437,49 @@ h2.display,h3{text-wrap:balance}
     </dl>
     <div class="dial">
       <a class="btn lt" href="tel:+78442000000"><b>Позвонить</b><i><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12 12 4M5 4h7v7"/></svg></i></a>
+      <button class="btn lt ghost" id="leadBtn" type="button"><b>Оставить заявку</b><i><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 13.5V11l7-7 2.5 2.5-7 7H3Z"/><path d="M9.5 5 11 3.5 13.5 6 12 7.5"/></svg></i></button>
     </div>
     <div class="sub">
       <p>Следим за инженерными системами, чистотой и двором. <span>Предупреждаем о работах заранее и отвечаем на все возникшие вопросы по существу.</span></p>
     </div>
   </section>
+
+  <!-- ЗАЯВКА -->
+  <div class="lead-scrim" id="leadScrim"></div>
+  <div class="lead-modal" id="leadModal" role="dialog" aria-modal="true" aria-labelledby="leadTitle" aria-hidden="true">
+    <button class="lead-close" id="leadClose" type="button" aria-label="Закрыть"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="m3 3 10 10M13 3 3 13"/></svg></button>
+    <form class="lf" id="leadForm">
+      <h2 class="display" id="leadTitle">Оставить заявку</h2>
+      <p class="sub">Ответим в течение рабочего дня. Для срочных проблем звоните в диспетчерскую — она работает круглосуточно.</p>
+      <label for="leadName">Имя</label>
+      <input id="leadName" type="text" name="name" autocomplete="name" placeholder="Как к вам обращаться">
+      <label for="leadPhone">Телефон</label>
+      <input id="leadPhone" type="tel" name="phone" autocomplete="tel" placeholder="+7 ___ ___-__-__" required>
+      <label for="leadZhk">Жилой комплекс</label>
+      <select id="leadZhk" name="zhk">
+        <option value="">Не знаю / другое</option>
+        <option value="geroi">Герои поколений</option>
+        <option value="novy">Новый</option>
+        <option value="semeyny">Семейный</option>
+        <option value="severny">Северный</option>
+        <option value="bereg">Берег Волги</option>
+        <option value="zenit">Зенит</option>
+        <option value="granat">Гранат</option>
+        <option value="tarifnaya">Тарифная</option>
+        <option value="gvard35">На 35‑й Гвардейской</option>
+        <option value="atlasova">Атласова</option>
+      </select>
+      <label for="leadMsg">Комментарий</label>
+      <textarea id="leadMsg" name="message" placeholder="Коротко опишите вопрос — необязательно"></textarea>
+      <button class="btn" type="submit"><b>Отправить заявку</b><i><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12 12 4M5 4h7v7"/></svg></i></button>
+      <p class="fine">Нажимая «Отправить», вы соглашаетесь на обработку персональных данных.</p>
+    </form>
+    <div class="lead-ok" id="leadOk">
+      <h2 class="display">Заявка сформирована</h2>
+      <p>Откроется почтовый клиент с заполненным письмом — останется только отправить его. Если ничего не открылось, позвоните в диспетчерскую: <a href="tel:+78442000000">+7 (8442) 00-00-00</a>.</p>
+      <button class="btn" id="leadOkClose" type="button"><b>Закрыть</b><i><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="m3 3 10 10M13 3 3 13"/></svg></i></button>
+    </div>
+  </div>
 
   <!-- ПРИНЦИП -->
   <section class="dark principle" data-dark id="about">
@@ -589,6 +651,34 @@ var PH={"geroi": "UklGRvCWAABXRUJQVlA4IOSWAADwegKdASr4AjoCPok8mkolIyipJTS72SARCW
   mb.addEventListener('click',function(){var isOpen=menu.classList.toggle('open');root.classList.toggle('menu-open',isOpen);scrim.classList.toggle('show',isOpen)});
   scrim.addEventListener('click',closeMenu);
   $$('a',menu).forEach(function(a){a.addEventListener('click',closeMenu)});
+
+  /* ---------- заявка ---------- */
+  var leadBtn=$('#leadBtn'),leadModal=$('#leadModal'),leadScrim=$('#leadScrim'),leadClose=$('#leadClose'),leadForm=$('#leadForm'),leadOk=$('#leadOk'),leadOkClose=$('#leadOkClose');
+  var ZHKN={geroi:'Герои поколений',novy:'Новый',semeyny:'Семейный',severny:'Северный',bereg:'Берег Волги',zenit:'Зенит',granat:'Гранат',tarifnaya:'Тарифная',gvard35:'На 35‑й Гвардейской',atlasova:'Атласова'};
+  function openLead(){
+    leadScrim.classList.add('show');leadModal.classList.add('show');leadModal.setAttribute('aria-hidden','false');
+    leadForm.hidden=false;leadOk.classList.remove('show');
+    setTimeout(function(){$('#leadName').focus()},300);
+  }
+  function closeLead(){leadScrim.classList.remove('show');leadModal.classList.remove('show');leadModal.setAttribute('aria-hidden','true')}
+  if(leadBtn){
+    leadBtn.addEventListener('click',openLead);
+    leadScrim.addEventListener('click',closeLead);
+    leadClose.addEventListener('click',closeLead);
+    leadOkClose.addEventListener('click',closeLead);
+    addEventListener('keydown',function(e){if(e.key==='Escape'&&leadModal.classList.contains('show'))closeLead()});
+    leadForm.addEventListener('submit',function(e){
+      e.preventDefault();
+      var name=$('#leadName').value.trim(),phone=$('#leadPhone').value.trim(),zhk=$('#leadZhk').value,msg=$('#leadMsg').value.trim();
+      if(!phone){$('#leadPhone').focus();return}
+      var lines=['Имя: '+(name||'—'),'Телефон: '+phone];
+      if(zhk)lines.push('ЖК: '+(ZHKN[zhk]||zhk));
+      if(msg)lines.push('Комментарий: '+msg);
+      var subject=encodeURIComponent('Заявка с сайта'+(name?' — '+name:'')),body=encodeURIComponent(lines.join('\n'));
+      location.href='mailto:info@sovgorod.example?subject='+subject+'&body='+body;
+      leadForm.hidden=true;leadOk.classList.add('show');
+    });
+  }
 
   if(!window.gsap||!window.ScrollTrigger){return}
   gsap.registerPlugin(ScrollTrigger);
