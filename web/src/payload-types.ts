@@ -70,6 +70,7 @@ export interface Config {
     users: User;
     media: Media;
     news: News;
+    events: Event;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -80,6 +81,7 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     news: NewsSelect<false> | NewsSelect<true>;
+    events: EventsSelect<false> | EventsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -185,8 +187,67 @@ export interface News {
     | 'bereg'
     | 'atlasova'
     | 'other';
-  text?: string | null;
+  text: string;
   cover?: (number | null) | Media;
+  /**
+   * Необязательно. Если не заполнить — на странице новости покажется короткий текст выше.
+   */
+  lead?: string | null;
+  body?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Например «Если батареи остались холодными». Необязательно.
+   */
+  highlightTitle?: string | null;
+  highlightList?:
+    | {
+        item: string;
+        id?: string | null;
+      }[]
+    | null;
+  files?:
+    | {
+        label: string;
+        meta?: string | null;
+        file: number | Media;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "events".
+ */
+export interface Event {
+  id: number;
+  title: string;
+  date: string;
+  complex:
+    | 'all'
+    | 'zenit'
+    | 'severny'
+    | 'semeyny'
+    | 'novy'
+    | 'tarifnaya'
+    | 'granat'
+    | 'gvard35'
+    | 'geroi'
+    | 'bereg'
+    | 'atlasova'
+    | 'other';
+  /**
+   * Например «во дворе дома 27» или «холл 1-го подъезда». Необязательно.
+   */
+  place?: string | null;
+  text: string;
+  cover?: (number | null) | Media;
+  lead?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -225,6 +286,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'news';
         value: number | News;
+      } | null)
+    | ({
+        relationTo: 'events';
+        value: number | Event;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -319,6 +384,43 @@ export interface NewsSelect<T extends boolean = true> {
   complex?: T;
   text?: T;
   cover?: T;
+  lead?: T;
+  body?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  highlightTitle?: T;
+  highlightList?:
+    | T
+    | {
+        item?: T;
+        id?: T;
+      };
+  files?:
+    | T
+    | {
+        label?: T;
+        meta?: T;
+        file?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "events_select".
+ */
+export interface EventsSelect<T extends boolean = true> {
+  title?: T;
+  date?: T;
+  complex?: T;
+  place?: T;
+  text?: T;
+  cover?: T;
+  lead?: T;
   updatedAt?: T;
   createdAt?: T;
 }
