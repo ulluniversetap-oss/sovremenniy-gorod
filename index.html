@@ -609,7 +609,7 @@ var PH={"geroi": "UklGRnBpBABXRUJQVlA4IGRpBAAwAxCdASrxBjUFPjEYiUOiIaEjI/OrEGAGCW
     var lbl=z.w?z.td:'без отключений',dot='<i class="dot'+(z.w?' w':'')+'"></i>';
     var sub=z.h+' '+hn(z.h)+' · '+z.a;
     var media=PH[z.id]?'<img alt="ЖК «'+z.n+'»" loading="lazy" src="data:image/webp;base64,'+PH[z.id]+'">':facade(z.f,z.s,i);
-    return '<a class="tl" href="#zhk-'+z.id+'" data-s="'+st(z)+'" data-ok="'+(z.ok?1:0)+'"><div class="tl-ph">'+media+'<span class="tl-st">'+dot+'<span class="tx">'+lbl+'</span></span></div><div class="tl-bt"><h3>'+z.n+'</h3><p>'+sub+'</p><span class="tl-ar">'+ARR+'</span></div></a>';
+    return '<a class="tl" href="zhk.html?id='+z.id+'" data-s="'+st(z)+'" data-ok="'+(z.ok?1:0)+'"><div class="tl-ph">'+media+'<span class="tl-st">'+dot+'<span class="tx">'+lbl+'</span></span></div><div class="tl-bt"><h3>'+z.n+'</h3><p>'+sub+'</p><span class="tl-ar">'+ARR+'</span></div></a>';
   }).join('')+'<a class="tl all" href="#docs"><div class="tl-bt"><h3>Все дома по адресам</h3><p>Реестр на '+TOTAL+' '+hn(TOTAL)+': найдите свой адрес и документы дома</p><span class="tl-ar">'+ARR+'</span></div></a>';
   $('#mq').innerHTML=(function(){var h=EVENTS.map(function(e,i){var ph=e[3]&&PH[e[3]];return '<a class="ev'+(ph?' ph':'')+'" href="event.html?id='+e[4]+'">'+(ph?'<img alt="" loading="lazy" src="data:image/webp;base64,'+PH[e[3]]+'">':'')+'<div class="tp"><span>'+e[1]+'</span>'+(i===0?'<em>ближайшее</em>':'')+'</div><div class="bt"><b>'+e[2]+'</b><div class="d mono-num">'+e[0]+'</div><span class="ev-ar"><svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12 12 4M5 4h7v7"/></svg></span></div></a>'}).join('');return h+h})();
 
@@ -635,7 +635,7 @@ var PH={"geroi": "UklGRnBpBABXRUJQVlA4IGRpBAAwAxCdASrxBjUFPjEYiUOiIaEjI/OrEGAGCW
   var SHOW_ALERT=false; /* временно скрыто по просьбе клиента — чтобы вернуть, поставь true */
   var al=SHOW_ALERT&&ZHK.filter(function(z){return z.al})[0],alertEl=$('#alert');
   if(al){alertEl.hidden=false;root.classList.add('has-alert');
-    alertEl.innerHTML='<b>ЖК «'+al.n+'»</b><span>'+al.al+'</span><a href="#zhk-'+al.id+'">Подробнее</a><button aria-label="Скрыть">×</button>';
+    alertEl.innerHTML='<b>ЖК «'+al.n+'»</b><span>'+al.al+'</span><a href="zhk.html?id='+al.id+'">Подробнее</a><button aria-label="Скрыть">×</button>';
     alertEl.querySelector('button').addEventListener('click',function(){alertEl.hidden=true;root.classList.remove('has-alert')});}
 
 
