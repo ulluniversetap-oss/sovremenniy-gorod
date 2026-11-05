@@ -691,26 +691,31 @@ html,body{background:var(--dk)}
     var w=document.createTreeWalker(el,NodeFilter.SHOW_TEXT),n,l=[];while(n=w.nextNode())l.push(n);
     l.forEach(function(t){var v=t.nodeValue,o;do{o=v;v=v.replace(re,function(m,b){return b+N})}while(v!==o);t.nodeValue=v});
   });
-  if(window.gsap&&!reduce){gsap.from('.zhero .ehero-in > *, .zhero-bt > *',{y:30,opacity:0,duration:.9,ease:'power3.out',stagger:.08,delay:.1})}
+  if(window.gsap&&!reduce){gsap.from('.zhero .ehero-in > *, .zhero-bt > *',{y:30,opacity:0,duration:.9,ease:'power3.out',stagger:.08,delay:.1,onComplete:function(){window.dispatchEvent(new Event('heroAnimDone'))}})}
 })();
 
 ;(function(){
-  function bl(el){var s=document.createElement('span');s.style.cssText='display:inline-block;width:0;height:0;vertical-align:baseline';el.appendChild(s);var y=s.getBoundingClientRect().bottom;s.remove();return y}
+  function topRelTo(el,ancestor){ /* layout-based, immune to CSS transforms (e.g. the entrance animation) */
+    var t=0;
+    while(el&&el!==ancestor){t+=el.offsetTop;el=el.offsetParent}
+    return t;
+  }
   function alignAddr(){
-    var a=document.querySelector('.zhero .addr'),h=document.querySelector('.zhero h1'),p=a&&a.querySelector('.ad p:last-child');
-    if(!a||!h||!p)return;
-    [].forEach.call(a.children,function(c){c.style.transform=''});a.style.removeProperty('--ln');
+    var a=document.querySelector('.zhero .addr'),tag=document.querySelector('.zhero .etag');
+    if(!a||!tag||!a.offsetParent)return;
+    a.style.top='';a.style.bottom='';a.style.removeProperty('--ln');
     if(window.innerWidth<=1000)return;
-    var d=bl(h)-bl(p);
-    if(Math.abs(d)>.2)[].forEach.call(a.children,function(c){c.style.transform='translateY('+d.toFixed(2)+'px)'});
-    var hero=document.querySelector('.zhero'),g=hero.getBoundingClientRect().bottom-p.getBoundingClientRect().bottom,
-        ln=a.firstElementChild.getBoundingClientRect().top-g-a.getBoundingClientRect().top;
-    a.style.setProperty('--ln',ln.toFixed(1)+'px');
+    var top=topRelTo(tag,a.offsetParent);
+    a.style.top=top.toFixed(1)+'px';
+    a.style.bottom='auto';
+    a.style.setProperty('--ln','-22px');
   }
   window.addEventListener('resize',alignAddr);
   window.addEventListener('load',alignAddr);
+  window.addEventListener('heroAnimDone',alignAddr); /* re-check once the hero entrance animation (gsap) has fully settled */
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(alignAddr);
   alignAddr();
+  setTimeout(alignAddr,1300); /* fallback in case gsap/the animation event never fires */
 })();
 
 </script>
