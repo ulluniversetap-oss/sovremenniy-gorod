@@ -164,15 +164,15 @@ header.top::before{content:'';position:absolute;left:0;right:0;top:0;bottom:0;ba
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:28px}
 .chips span{padding:9px 14px;background:rgba(239,239,237,.08);font-size:12px;color:var(--dki)}
 .stair{--ov:clamp(80px,13vw,190px);--dl:clamp(30px,5vw,80px);display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;margin:calc(var(--ov)*-1) calc(var(--gx)*-1) -3px;position:relative;z-index:2}
-.stair .st{position:relative;background:var(--bg);color:var(--ink);min-height:0;padding:56px 22px 36px 22px;transform:translateY(calc(var(--i)*var(--dl)));will-change:transform}
-.stair::after{content:'';position:absolute;left:0;right:0;top:calc(100% - 4px);height:10px;background:var(--bg);z-index:3}
-.stair .st::before{content:'';position:absolute;left:0;top:0;bottom:0;width:1px;background:linear-gradient(var(--line) 55%,transparent)}
+.stair .st{position:relative;background:var(--dki);color:var(--dk);min-height:0;padding:56px 22px 36px 22px;transform:translateY(calc(var(--i)*var(--dl)));will-change:transform}
+.stair::after{content:'';position:absolute;left:0;right:0;top:calc(100% - 4px);height:10px;background:var(--dki);z-index:3}
+.stair .st::before{content:'';position:absolute;left:0;top:0;bottom:0;width:1px;background:linear-gradient(var(--dkl) 55%,transparent)}
 .stair .st:first-child{padding-left:var(--gx)}.stair .st:first-child::before{display:none}
-.stair .n{font-size:11px;color:var(--mut)}
+.stair .n{font-size:11px;color:var(--dkm)}
 .stair h3{font-weight:400;font-size:clamp(20px,2.2vw,30px);letter-spacing:-.035em;line-height:1.05;margin:44px 0 10px}
-.stair p{font-size:13px;color:var(--mut);max-width:26ch}
+.stair p{font-size:13px;color:var(--dkm);max-width:26ch}
 @media(max-width:900px){.house .hi{aspect-ratio:4/3}.house img{object-position:50% 100%}.stair{--ov:70px;grid-template-columns:1fr 1fr}.stair .st{transform:none!important;min-height:0;padding:calc(var(--ov)*.4 + 8px) 20px 28px}.stair .st:nth-child(odd){padding-left:var(--gx)}.stair .st:nth-child(odd)::before{display:none}}
-@media(max-width:520px){.stair{grid-template-columns:1fr}.stair .st::before{display:none}.stair .st,.stair .st:nth-child(odd),.stair .st:first-child{border-top:1px solid var(--line);padding-left:var(--gx)}}
+@media(max-width:520px){.stair{grid-template-columns:1fr}.stair .st::before{display:none}.stair .st,.stair .st:nth-child(odd),.stair .st:first-child{border-top:1px solid var(--dkl);padding-left:var(--gx)}}
 
 /* ---------- assembly ---------- */
 .asm{position:relative;overflow:hidden}
