@@ -185,6 +185,7 @@ header.top::before{content:'';position:absolute;left:0;right:0;top:0;bottom:0;ba
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:28px}
 .chips span{padding:9px 14px;background:rgba(239,239,237,.08);font-size:12px;color:var(--dki)}
 .stair{--ov:clamp(80px,13vw,190px);--dl:clamp(30px,5vw,80px);display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;margin:calc(var(--ov)*-1) calc(var(--gx)*-1) -3px;position:relative;z-index:2}
+.stair::after{content:'';position:absolute;left:0;right:0;bottom:0;height:var(--pb,0px);background:var(--bg)}
 .stair .st{position:relative;background:var(--bg);color:var(--ink);min-height:0;padding:56px 22px 36px 22px;transform:translateY(calc(var(--i)*var(--dl)));will-change:transform}
 .stair .st::before{content:'';position:absolute;left:0;top:0;bottom:0;width:1px;background:linear-gradient(var(--line) 55%,transparent)}
 .stair .st:first-child{padding-left:var(--gx)}.stair .st:first-child::before{display:none}
@@ -746,11 +747,11 @@ var PH={"geroi": "UklGRnBpBABXRUJQVlA4IGRpBAAwAxCdASrxBjUFPjEYiUOiIaEjI/OrEGAGCW
   /* плашки поднимаются в один ряд и накрывают фото */
   mm.add('(min-width:901px)',function(){
     var pl=$$('.stair .st'),stairEl=$('.stair');if(!pl.length)return;
-    if(reduce){gsap.set(pl,{y:0});if(stairEl)gsap.set(stairEl,{paddingBottom:0});return}
+    if(reduce){gsap.set(pl,{y:0});if(stairEl)gsap.set(stairEl,{paddingBottom:0,'--pb':'0px'});return}
     var dl=Math.min(80,Math.max(30,innerWidth*0.05));
     gsap.fromTo(pl,{y:function(i){return i*dl}},{y:0,ease:'none',scrollTrigger:{trigger:'.stair',start:'top 98%',end:'top 28%',scrub:.6}});
     /* контейнер «сдувается» синхронно с карточками, чтобы следующая секция не наезжала на анимацию и не оставался пустой хвост */
-    if(stairEl)gsap.fromTo(stairEl,{paddingBottom:dl*3},{paddingBottom:0,ease:'none',scrollTrigger:{trigger:'.stair',start:'top 98%',end:'top 28%',scrub:.6}});
+    if(stairEl)gsap.fromTo(stairEl,{paddingBottom:dl*3,'--pb':dl*3+'px'},{paddingBottom:0,'--pb':'0px',ease:'none',scrollTrigger:{trigger:'.stair',start:'top 98%',end:'top 28%',scrub:.6}});
   });
 
   /* ---------- сборка дома ---------- */
