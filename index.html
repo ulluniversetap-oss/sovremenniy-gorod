@@ -747,10 +747,12 @@ var PH={"geroi": "UklGRnBpBABXRUJQVlA4IGRpBAAwAxCdASrxBjUFPjEYiUOiIaEjI/OrEGAGCW
   var mm=gsap.matchMedia();
   /* плашки поднимаются в один ряд и накрывают фото */
   mm.add('(min-width:901px)',function(){
-    var pl=$$('.stair .st');if(!pl.length)return;
-    if(reduce){gsap.set(pl,{y:0});return}
+    var pl=$$('.stair .st'),stairEl=$('.stair');if(!pl.length)return;
+    if(reduce){gsap.set(pl,{y:0});if(stairEl)gsap.set(stairEl,{paddingBottom:0});return}
     var dl=Math.min(80,Math.max(30,innerWidth*0.05));
     gsap.fromTo(pl,{y:function(i){return i*dl}},{y:0,ease:'none',scrollTrigger:{trigger:'.stair',start:'top 98%',end:'top 28%',scrub:.6}});
+    /* контейнер «сдувается» синхронно с карточками, чтобы следующая секция не наезжала на анимацию и не оставался пустой хвост */
+    if(stairEl)gsap.fromTo(stairEl,{paddingBottom:dl*3,'--sb':dl*3+'px'},{paddingBottom:0,'--sb':'0px',ease:'none',scrollTrigger:{trigger:'.stair',start:'top 98%',end:'top 28%',scrub:.6}});
   });
 
   /* ---------- сборка дома ---------- */
