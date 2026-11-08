@@ -770,7 +770,7 @@ var PH={"geroi": "UklGRnBpBABXRUJQVlA4IGRpBAAwAxCdASrxBjUFPjEYiUOiIaEjI/OrEGAGCW
     var tl=gsap.timeline({scrollTrigger:{trigger:stairEl,start:'top 20%',end:'+='+Math.round(innerHeight*1.25),scrub:.7,pin:true,anticipatePin:1}});
     for(var i=1;i<cards.length;i++){
       tl.to(cards[i],{yPercent:0,ease:'power2.inOut',duration:1},i-1);
-      tl.to(cards[i-1],{scale:.96,filter:'brightness(.82)',ease:'power2.inOut',duration:1},i-1);
+      tl.to(cards[i-1],{scale:.96,ease:'power2.inOut',duration:1},i-1);
     }
     return function(){
       stairEl.classList.remove('stacked');
