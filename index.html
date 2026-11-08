@@ -760,13 +760,13 @@ var PH={"geroi": "UklGRnBpBABXRUJQVlA4IGRpBAAwAxCdASrxBjUFPjEYiUOiIaEjI/OrEGAGCW
     if(stairEl)gsap.fromTo(stairEl,{paddingBottom:dl*3,'--pb':dl*3+'px'},{paddingBottom:0,'--pb':'0px',ease:'none',scrollTrigger:{trigger:'.stair',start:'top 98%',end:'top 28%',scrub:.6}});
   });
 
-  /* мобилка: карточки по очереди наезжают справа налево, скролл замирает на блоке */
+  /* мобилка: держим заголовок/дом на экране, под ними карточки по очереди наезжают справа налево */
   mm.add('(max-width:900px)',function(){
-    var cont=$('.stair.stacked'),pl=$$('.stair.stacked .st');
-    if(!cont||pl.length<2)return;
+    var sec=$('#about'),cont=$('.stair.stacked'),pl=$$('.stair.stacked .st');
+    if(!sec||!cont||pl.length<2)return;
     if(reduce){gsap.set(pl,{xPercent:0});return}
     gsap.set(pl.slice(1),{xPercent:100});
-    var tl=gsap.timeline({scrollTrigger:{trigger:cont,start:'top 64px',end:function(){return '+='+Math.round(cont.getBoundingClientRect().height)},scrub:.6,pin:true,anticipatePin:1,invalidateOnRefresh:true}});
+    var tl=gsap.timeline({scrollTrigger:{trigger:sec,start:'bottom bottom',end:function(){return '+='+Math.round(cont.getBoundingClientRect().height)},scrub:.6,pin:true,anticipatePin:1,invalidateOnRefresh:true}});
     for(var i=1;i<pl.length;i++){tl.to(pl[i],{xPercent:0,ease:'none'})}
   });
 
