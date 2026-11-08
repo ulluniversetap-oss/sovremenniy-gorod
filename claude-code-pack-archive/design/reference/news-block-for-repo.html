@@ -1,0 +1,58 @@
+<!-- ============ НОВОСТИ: замена блока в index.html репозитория ============ -->
+<!-- 1) CSS: удалить старые правила .news / .news-list / .news-item / .news-empty и вставить: -->
+<style>
+/* ---------- новости ---------- */
+.news{padding:clamp(20px,3vw,40px) 0 clamp(80px,9vw,130px)}
+.news .hd{display:flex;justify-content:space-between;align-items:flex-end;gap:30px;padding:0 var(--gx);margin-bottom:46px}
+.news h2{font-size:clamp(36px,5.4vw,84px)}
+.nw{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:12px;padding:0 var(--gx)}
+.nw a{position:relative;display:flex;flex-direction:column;justify-content:space-between;gap:28px;grid-column:span 5;min-height:clamp(210px,17.5vw,260px);padding:clamp(20px,2vw,32px);background:var(--card);transition:background .45s var(--ease),color .45s var(--ease)}
+.nw a:first-child{grid-column:span 7;grid-row:span 2;background:var(--slot);min-height:clamp(430px,36vw,540px)}
+.nw.n1 a:first-child{grid-column:span 12;grid-row:auto;min-height:clamp(300px,26vw,400px)}
+.nw.n2 a:first-child{grid-row:auto}
+.nw .tp{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.nw .dt{font-size:12px;font-weight:400;letter-spacing:.01em;opacity:.6;font-variant-numeric:tabular-nums}
+.nw .tg{font-style:normal;font-size:12px;font-weight:400;padding:5px 11px;background:color-mix(in srgb,currentColor 11%,transparent);white-space:nowrap}
+.nw .tx{display:flex;flex-direction:column;gap:14px;padding-right:56px}
+.nw h3{font-weight:300;font-size:clamp(21px,1.9vw,28px);letter-spacing:-.04em;line-height:1.1;max-width:20ch}
+.nw a:first-child h3{font-size:clamp(30px,3.7vw,58px);line-height:1.04;max-width:15ch}
+.nw p{font-size:14px;line-height:1.4;opacity:.6;max-width:44ch;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.nw a:first-child p{font-size:16px;-webkit-line-clamp:3}
+.nw .ar{position:absolute;right:clamp(20px,2vw,32px);bottom:clamp(20px,2vw,32px);width:40px;height:40px;display:grid;place-items:center;border:1px solid currentColor;border-radius:50%;transition:background .35s,color .35s,border-color .35s}
+.nw .ar svg{width:13px;height:13px;transition:transform .45s var(--ease)}
+.nw a:hover{background:var(--ink);color:var(--bg)}
+.nw a:hover .ar svg{transform:rotate(45deg)}
+.nw a:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+@media(max-width:900px){.nw{grid-template-columns:1fr}.nw a,.nw a:first-child,.nw.n1 a:first-child{grid-column:auto;grid-row:auto;min-height:0}.nw a:first-child{min-height:320px}.nw .tx{padding-right:0;padding-bottom:56px}.news .hd{flex-wrap:wrap;align-items:flex-start;gap:20px}}
+.news .nw-empty{padding:0 var(--gx);color:var(--mut);font-size:14px}
+</style>
+
+<!-- 2) HTML: заменить <section class="news" id="news"> целиком: -->
+<section class="news" id="news">
+  <div class="hd"><div><h2 class="display">Новости</h2></div><a class="btn" href="news.html"><b>Все новости</b><i><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12 12 4M5 4h7v7"/></svg></i></a></div>
+  <div class="nw" id="nw"></div>
+</section>
+
+<!-- 3) JS: заменить IIFE «новости (подгружаются из news.json…)» на: -->
+<script>
+(function(){
+  var M=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+  function fd(s){var m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(s||'');return m?(+m[3]+' '+M[+m[2]-1]+' '+m[1]):(s||'')}
+  function esc(t){return String(t||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+  /* тег ЖК: поле complex в news.json / коллекции News — те же id, что в Payload (COMPLEX_OPTIONS); 'all' или пусто = «Все ЖК» */
+  var ZN={geroi:'Герои поколений',novy:'Новый',semeyny:'Семейный',severny:'Северный',bereg:'Берег Волги',zenit:'Зенит',granat:'Гранат',tarifnaya:'Тарифная',gvard35:'На 35‑й Гвардейской',atlasova:'Атласова'};
+  function tag(c){return ZN[c]||'Все ЖК'}
+  var AR='<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M2 10 10 2M4 2h6v6"/></svg>';
+  function render(list){
+    var box=document.getElementById('nw');if(!box)return;
+    if(!list||!list.length){box.outerHTML='<p class="nw-empty">Пока новостей нет.</p>';return}
+    list=list.slice().sort(function(a,b){return (b.date||'')<(a.date||'')?-1:1}).slice(0,3);
+    box.className='nw n'+list.length;
+    box.innerHTML=list.map(function(n){return '<a href="news.html"><div class="tp"><span class="dt">'+fd(n.date)+'</span><em class="tg">'+esc(tag(n.complex))+'</em></div><div class="tx"><h3>'+esc(n.title)+'</h3><p>'+esc(n.text)+'</p></div><span class="ar">'+AR+'</span></a>'}).join('');
+  }
+  fetch('news.json',{cache:'no-store'}).then(function(r){return r.ok?r.json():[]}).then(render).catch(function(){render([])});
+})();
+</script>
+<!-- Заодно: в шапке и меню «Новости» → #news, кнопка «Все мероприятия» → events.html. -->
+<!-- news.json: {"date":"2026-11-01","complex":"all","title":"…","text":"…"}  — complex: all | geroi | novy | semeyny | severny | bereg | zenit | granat | tarifnaya | gvard35 | atlasova.
+     В admin.html нужен select «ЖК» с этими значениями. -->
