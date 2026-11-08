@@ -197,7 +197,7 @@ header.top::before{content:'';position:absolute;left:0;right:0;top:0;bottom:0;ba
 .stair h3{font-weight:400;font-size:clamp(20px,2.2vw,30px);letter-spacing:-.035em;line-height:1.05;margin:44px 0 10px}
 .stair p{font-size:13px;color:var(--mut);max-width:26ch}
 @media(min-width:901px){.stair{padding-bottom:calc(var(--dl)*3)}}
-@media(max-width:900px){.house .hi{aspect-ratio:4/3}.house img{object-position:50% 100%}.stair{--ov:70px;grid-template-columns:1fr 1fr}.stair .st{transform:none!important;min-height:0;padding:calc(var(--ov)*.4 + 8px) 20px 28px}.stair .st:nth-child(odd){padding-left:var(--gx)}.stair .st:nth-child(odd)::before{display:none}}
+@media(max-width:900px){.house .hi{aspect-ratio:4/3}.house img{object-position:50% 100%}.stair{--ov:70px;grid-template-columns:1fr 1fr}.stair:not(.stacked) .st{transform:none!important;min-height:0;padding:calc(var(--ov)*.4 + 8px) 20px 28px}.stair:not(.stacked) .st:nth-child(odd){padding-left:var(--gx)}.stair:not(.stacked) .st:nth-child(odd)::before{display:none}}
 @media(max-width:520px){.stair{grid-template-columns:1fr}.stair .st::before{display:none}.stair .st,.stair .st:nth-child(odd),.stair .st:first-child{border-top:1px solid var(--line);padding-left:var(--gx)}}
 @media(max-width:900px){.stair.stacked{display:block;position:relative;overflow:visible}.stair.stacked .st{position:absolute;inset:0;width:100%;padding:32px var(--gx) 36px;border-top:1px solid var(--line)}.stair.stacked .st::before{display:none}}
 
