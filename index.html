@@ -763,6 +763,15 @@ var PH={"geroi": "UklGRnBpBABXRUJQVlA4IGRpBAAwAxCdASrxBjUFPjEYiUOiIaEjI/OrEGAGCW
   mm.add('(max-width:900px)',function(){
     var sec=$('#about'),cont=$('.stair.stacked'),pl=$$('.stair.stacked .st');
     if(!sec||!cont||pl.length<2)return;
+    /* заголовок/подзаголовок в запиненном блоке уже видны при старте пина — обычный reveal-скролл (.rv)
+       иначе доигрывает уже во время пина и даёт заметный скачок на неподвижной картинке */
+    var rv=sec.querySelectorAll('.rv');
+    ScrollTrigger.getAll().forEach(function(t){
+      for(var i=0;i<rv.length;i++){
+        if(t.trigger===rv[i]){ if(t.animation)t.animation.kill(); t.kill(); break; }
+      }
+    });
+    gsap.set(rv,{clearProps:'all'});
     if(reduce){gsap.set(pl,{xPercent:0});return}
     gsap.set(pl.slice(1),{xPercent:100});
     var tl=gsap.timeline({scrollTrigger:{trigger:cont,pin:sec,start:'bottom bottom-=90',end:function(){return '+='+Math.round(cont.getBoundingClientRect().height*5.25)},scrub:.5,fastScrollEnd:true,anticipatePin:1,invalidateOnRefresh:true}});
