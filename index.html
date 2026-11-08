@@ -199,6 +199,7 @@ header.top::before{content:'';position:absolute;left:0;right:0;top:0;bottom:0;ba
 @media(min-width:901px){.stair{padding-bottom:calc(var(--dl)*3)}}
 @media(max-width:900px){.house .hi{aspect-ratio:4/3}.house img{object-position:50% 100%}.stair{--ov:70px;grid-template-columns:1fr 1fr}.stair .st{transform:none!important;min-height:0;padding:calc(var(--ov)*.4 + 8px) 20px 28px}.stair .st:nth-child(odd){padding-left:var(--gx)}.stair .st:nth-child(odd)::before{display:none}}
 @media(max-width:520px){.stair{grid-template-columns:1fr}.stair .st::before{display:none}.stair .st,.stair .st:nth-child(odd),.stair .st:first-child{border-top:1px solid var(--line);padding-left:var(--gx)}}
+@media(max-width:900px){.stair.stacked{display:block;position:relative;overflow:visible}.stair.stacked .st{position:absolute;inset:0;width:100%;padding:32px var(--gx) 36px;border-top:1px solid var(--line)}.stair.stacked .st::before{display:none}}
 
 /* ---------- assembly ---------- */
 .asm{position:relative;overflow:hidden}
@@ -756,6 +757,26 @@ var PH={"geroi": "UklGRnBpBABXRUJQVlA4IGRpBAAwAxCdASrxBjUFPjEYiUOiIaEjI/OrEGAGCW
     gsap.fromTo(pl,{y:function(i){return i*dl}},{y:0,ease:'none',scrollTrigger:{trigger:'.stair',start:'top 98%',end:'top 28%',scrub:.6}});
     /* контейнер «сдувается» синхронно с карточками, чтобы следующая секция не наезжала на анимацию и не оставался пустой хвост */
     if(stairEl)gsap.fromTo(stairEl,{paddingBottom:dl*3,'--pb':dl*3+'px'},{paddingBottom:0,'--pb':'0px',ease:'none',scrollTrigger:{trigger:'.stair',start:'top 98%',end:'top 28%',scrub:.6}});
+  });
+  /* мобильный: карточки шагов наезжают друг на друга стопкой, вместо длинного списка */
+  mm.add('(max-width:900px)',function(){
+    var cards=$$('.stair .st'),stairEl=$('.stair');if(!cards.length||!stairEl)return;
+    if(reduce)return;
+    var maxH=Math.max.apply(null,cards.map(function(c){return c.getBoundingClientRect().height}));
+    stairEl.classList.add('stacked');
+    stairEl.style.height=maxH+'px';
+    gsap.set(cards,{zIndex:function(i){return i+1}});
+    gsap.set(cards.slice(1),{yPercent:100});
+    var tl=gsap.timeline({scrollTrigger:{trigger:stairEl,start:'top 20%',end:'+='+Math.round(innerHeight*1.25),scrub:.7,pin:true,anticipatePin:1}});
+    for(var i=1;i<cards.length;i++){
+      tl.to(cards[i],{yPercent:0,ease:'power2.inOut',duration:1},i-1);
+      tl.to(cards[i-1],{scale:.96,filter:'brightness(.82)',ease:'power2.inOut',duration:1},i-1);
+    }
+    return function(){
+      stairEl.classList.remove('stacked');
+      stairEl.style.height='';
+      gsap.set(cards,{clearProps:'all'});
+    };
   });
 
   /* ---------- сборка дома ---------- */
