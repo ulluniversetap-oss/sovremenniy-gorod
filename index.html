@@ -228,7 +228,7 @@ header.top::before{content:'';position:absolute;left:0;right:0;top:0;bottom:0;ba
 .asm-dots{display:none}
 .asm.dark{--ink:var(--dki);--mut:var(--dkm);--line:var(--dkl);--bg:var(--dk)}
 @media(max-width:700px){
-  .asm.static .cards{display:flex;grid-template-columns:none;overflow-x:auto;overflow-y:visible;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;gap:14px;margin:0 calc(var(--gx) * -1) 0;padding:4px var(--gx) 6px;width:auto}
+  .asm.static .cards{display:flex;grid-template-columns:none;overflow-x:auto;overflow-y:visible;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;gap:14px;margin:0 calc(var(--gx) * -1) 0;padding:4px var(--gx) 6px;align-self:stretch}
   .asm.static .cards::-webkit-scrollbar{display:none}
   .asm.static .cd{flex:0 0 78vw;min-width:0;scroll-snap-align:center;min-height:300px;transform:scale(.94);transition:transform .35s var(--ease)}
   .asm.static .cd.snap-active{transform:scale(1)}
