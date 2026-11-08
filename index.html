@@ -297,9 +297,23 @@ h2.display,h3{text-wrap:balance}
 .tl.all{grid-column:span 6;background:transparent;border:1px solid var(--line);justify-content:flex-end}
 .tl.all .tl-bt{flex:none;padding-top:0}.tl.all h3{font-size:clamp(26px,2.8vw,42px)}
 .tl.all h3{font-size:clamp(21px,1.9vw,28px)}
+.bento-dots{display:none}
 
 @media(max-width:1100px){.tl{grid-column:span 4}.tl.all{grid-column:span 8}}
-@media(max-width:700px){.bento{grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:minmax(210px,auto)}.tl{grid-column:span 1}.tl.all{grid-column:span 2}}
+@media(max-width:700px){
+  .bento{display:flex;grid-template-columns:none;overflow-x:auto;overflow-y:visible;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;gap:14px;margin:clamp(24px,5vw,32px) calc(var(--gx) * -1) 0;padding:4px var(--gx) 6px}
+  .bento::-webkit-scrollbar{display:none}
+  .tl{grid-column:unset;flex:0 0 78%;scroll-snap-align:center;transform:scale(.94);transition:opacity .4s,filter .4s,transform .35s var(--ease)}
+  .tl.all{flex:0 0 78%}
+  .tl.snap-active{transform:scale(1)}
+  .tl-ph{aspect-ratio:1/1}
+  .tl-bt{padding:14px 58px 18px 16px}
+  .tl p{-webkit-line-clamp:3;white-space:normal}
+  .tl-ar{right:14px;bottom:16px;width:32px;height:32px}
+  .bento-dots{display:flex;justify-content:center;gap:6px;margin-top:14px}
+  .bento-dots i{width:6px;height:6px;border-radius:50%;background:var(--line);transition:background .3s,transform .3s}
+  .bento-dots i.on{background:var(--ink);transform:scale(1.35)}
+}
 
 /* ---------- аннотации в hero ---------- */
 .an{position:absolute;z-index:3;font-size:11px;white-space:nowrap;display:flex;flex-direction:column;gap:3px;color:var(--mut);line-height:1.2}
@@ -514,6 +528,7 @@ h2.display,h3{text-wrap:balance}
       <p class="lead rv">Найдите свой ЖК: что происходит сегодня, документы дома и контакты управляющего.</p>
     </div>
     <div class="bento" id="bento"></div>
+    <div class="bento-dots" id="bentoDots" aria-hidden="true"></div>
   </section>
 
   <!-- СБОРКА ДОМА -->
@@ -620,6 +635,25 @@ var PH={"geroi": "UklGRnBpBABXRUJQVlA4IGRpBAAwAxCdASrxBjUFPjEYiUOiIaEjI/OrEGAGCW
     var media=PH[z.id]?'<img alt="ЖК «'+z.n+'»" loading="lazy" src="data:image/webp;base64,'+PH[z.id]+'">':facade(z.f,z.s,i);
     return '<a class="tl" href="zhk.html?id='+z.id+'" data-s="'+st(z)+'" data-ok="'+(z.ok?1:0)+'"><div class="tl-ph">'+media+'<span class="tl-st">'+dot+'<span class="tx">'+lbl+'</span></span></div><div class="tl-bt"><h3>'+z.n+'</h3><p>'+sub+'</p><span class="tl-ar">'+ARR+'</span></div></a>';
   }).join('')+'<a class="tl all" href="#docs"><div class="tl-bt"><h3>Все дома по адресам</h3><p>Реестр на '+TOTAL+' '+hn(TOTAL)+': найдите свой адрес и документы дома</p><span class="tl-ar">'+ARR+'</span></div></a>';
+  (function(){
+    var dotsWrap=$('#bentoDots'),tlEls=bento.querySelectorAll('.tl');
+    dotsWrap.innerHTML=Array.prototype.map.call(tlEls,function(){return '<i></i>'}).join('');
+    var dotEls=dotsWrap.querySelectorAll('i');
+    function syncBento(){
+      var cw=bento.clientWidth;
+      if(!cw)return;
+      var center=bento.scrollLeft+cw/2,idx=0,best=1e9;
+      tlEls.forEach(function(el,i){
+        var c=el.offsetLeft+el.offsetWidth/2,d=Math.abs(c-center);
+        if(d<best){best=d;idx=i}
+        el.classList.toggle('snap-active',d<cw*.3);
+      });
+      dotEls.forEach(function(d,i){d.classList.toggle('on',i===idx)});
+    }
+    bento.addEventListener('scroll',syncBento,{passive:true});
+    window.addEventListener('resize',syncBento);
+    syncBento();
+  })();
   $('#mq').innerHTML=(function(){var h=EVENTS.map(function(e,i){var ph=e[3]&&PH[e[3]];return '<a class="ev'+(ph?' ph':'')+'" href="event.html?id='+e[4]+'">'+(ph?'<img alt="" loading="lazy" src="data:image/webp;base64,'+PH[e[3]]+'">':'')+'<div class="tp"><span>'+e[1]+'</span>'+(i===0?'<em>ближайшее</em>':'')+'</div><div class="bt"><b>'+e[2]+'</b><div class="d mono-num">'+e[0]+'</div><span class="ev-ar"><svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12 12 4M5 4h7v7"/></svg></span></div></a>'}).join('');return h+h})();
 
   /* ---------- новости (подгружаются из news.json, редактируются через admin.html) ---------- */
