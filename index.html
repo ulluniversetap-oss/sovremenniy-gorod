@@ -765,7 +765,7 @@ var PH={"geroi": "UklGRnBpBABXRUJQVlA4IGRpBAAwAxCdASrxBjUFPjEYiUOiIaEjI/OrEGAGCW
     if(!sec||!cont||pl.length<2)return;
     if(reduce){gsap.set(pl,{xPercent:0});return}
     gsap.set(pl.slice(1),{xPercent:100});
-    var tl=gsap.timeline({scrollTrigger:{trigger:sec,start:function(){var r=cont.getBoundingClientRect();return Math.round(scrollY+r.bottom-innerHeight-90)},end:function(){return '+='+Math.round(cont.getBoundingClientRect().height*5.25)},scrub:.5,fastScrollEnd:true,pin:true,anticipatePin:1,invalidateOnRefresh:true}});
+    var tl=gsap.timeline({scrollTrigger:{trigger:sec,start:function(){var r=cont.getBoundingClientRect();return Math.round(scrollY+r.bottom-innerHeight+90)},end:function(){return '+='+Math.round(cont.getBoundingClientRect().height*5.25)},scrub:.5,fastScrollEnd:true,pin:true,anticipatePin:1,invalidateOnRefresh:true}});
     for(var i=1;i<pl.length;i++){tl.to(pl[i],{xPercent:0,ease:'none'})}
   });
 
