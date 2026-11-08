@@ -265,6 +265,8 @@ h2.display,h3{text-wrap:balance}
 /* ---------- объекты ---------- */
 .objs{padding:clamp(90px,10vw,150px) var(--gx) clamp(80px,9vw,130px)}
 .objs h2{font-size:clamp(34px,4.6vw,72px)}
+.objs h2 br.mb{display:none}
+@media(max-width:900px){.objs h2 br.mb{display:inline}}
 .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--ok);flex:none}
 .dot.w{background:var(--amber);box-shadow:0 0 0 4px rgba(255,176,0,.2)}
 .ob-bar{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-top:clamp(36px,4vw,60px)}
@@ -508,7 +510,7 @@ h2.display,h3{text-wrap:balance}
   <!-- ОБЪЕКТЫ -->
   <section class="objs" id="objects">
     <div class="sec-h">
-      <h2 class="display rv">Дома под нашей заботой</h2>
+      <h2 class="display rv">Дома под нашей<br class="mb"> заботой</h2>
       <p class="lead rv">Найдите свой ЖК: что происходит сегодня, документы дома и контакты управляющего.</p>
     </div>
     <div class="bento" id="bento"></div>
