@@ -372,9 +372,10 @@ h2.display,h3{text-wrap:balance}
 @media(max-width:900px){.nw{grid-template-columns:1fr}.nw a,.nw a:first-child,.nw.n1 a:first-child{grid-column:auto;grid-row:auto;min-height:0}.nw a:first-child{min-height:320px}.nw .tx{padding-right:0;padding-bottom:56px}.news .hd{flex-wrap:wrap;align-items:flex-start;gap:20px}}
 .news .nw-empty{padding:0 var(--gx);color:var(--mut);font-size:14px}
 .events h2{font-size:clamp(36px,5.4vw,84px)}
-.mq{display:flex;width:max-content;animation:mq 80s linear infinite;padding-left:var(--gx)}
-.mq:hover{animation-play-state:paused}
-@keyframes mq{to{transform:translateX(-50%)}}
+.mq{display:flex;overflow-x:auto;overflow-y:hidden;padding-left:var(--gx);scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;cursor:grab;user-select:none;-webkit-user-select:none}
+.mq::-webkit-scrollbar{display:none}
+.mq.drag{cursor:grabbing}
+.mq .ev img{-webkit-user-drag:none}
 .ev{position:relative;flex:none;width:clamp(260px,23vw,330px);aspect-ratio:4/5;margin-right:12px;overflow:hidden;isolation:isolate;display:flex;flex-direction:column;justify-content:space-between;padding:20px;background:var(--slot);color:var(--ink)}
 .ev img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;filter:brightness(.75) contrast(1.05);transition:filter .7s var(--ease),transform 1.1s var(--ease)}
 .ev.ph{color:#EFEFED}
@@ -390,7 +391,7 @@ h2.display,h3{text-wrap:balance}
 .ev-ar svg{width:12px;height:12px;transition:transform .45s var(--ease)}
 .ev:hover .ev-ar{background:var(--ink);color:var(--bg)}
 .ev:hover .ev-ar svg{transform:rotate(45deg)}
-@media(prefers-reduced-motion:reduce){.mq{animation:none;overflow-x:auto;width:auto}}
+
 @media(max-width:700px){.events .hd{flex-wrap:wrap;align-items:flex-start;gap:20px}}
 
 /* ---------- куда обращаться ---------- */
