@@ -370,6 +370,8 @@ h2.display,h3{text-wrap:balance}
 .nw a:hover .ar svg{transform:rotate(45deg)}
 .nw a:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
 @media(max-width:900px){.nw{grid-template-columns:1fr}.nw a,.nw a:first-child,.nw.n1 a:first-child{grid-column:auto;grid-row:auto;min-height:0}.nw a:first-child{min-height:320px}.nw .tx{padding-right:0;padding-bottom:56px}.news .hd{flex-wrap:wrap;align-items:flex-start;gap:20px}}
+.news .nw-more{display:none}
+@media(max-width:900px){.news .hd{justify-content:center;text-align:center;align-items:center}.news .hd .btn{display:none}.news .nw-more{display:flex;justify-content:center;padding:32px var(--gx) 0}}
 .news .nw-empty{padding:0 var(--gx);color:var(--mut);font-size:14px}
 .events h2{font-size:clamp(36px,5.4vw,84px)}
 .mq{display:flex;overflow-x:auto;overflow-y:hidden;padding-left:var(--gx);scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;cursor:grab;user-select:none;-webkit-user-select:none}
