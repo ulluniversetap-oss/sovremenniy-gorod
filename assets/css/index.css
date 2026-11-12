@@ -225,8 +225,8 @@ header.top::before{content:'';position:absolute;left:0;right:0;top:0;bottom:0;ba
 .asm-dots{display:none}
 .asm.dark{--ink:var(--dki);--mut:var(--dkm);--line:var(--dkl);--bg:var(--dk)}
 @media(max-width:900px){
-  .asm.static .cards{position:relative;display:block;overflow:hidden;width:100%;align-self:stretch}
-  .asm.static .cd{position:absolute;left:0;top:0;width:100%;height:auto;min-height:0;will-change:transform}
+  .asm.static .cards{position:relative;display:grid;grid-template-columns:100%;grid-template-rows:auto;gap:0;overflow:hidden;width:100%;align-self:stretch}
+  .asm.static .cd{position:relative;grid-area:1/1;align-self:stretch;width:100%;height:auto;min-height:0;will-change:transform}
 }
 
 .stack{position:relative;width:min(36vw,430px);aspect-ratio:1;transform-style:preserve-3d;transform:rotateX(63deg) rotateZ(-47deg)}
