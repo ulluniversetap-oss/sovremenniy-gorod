@@ -406,6 +406,10 @@ h2.display,h3{text-wrap:balance}
 .foot{position:relative;overflow:hidden;padding:clamp(56px,6vw,88px) var(--gx) 40px}
 .foot .big{display:block;font-size:clamp(34px,6.6vw,104px);letter-spacing:-.055em;font-weight:300;line-height:1;white-space:nowrap;position:relative;z-index:2}
 .foot .lbl{margin-bottom:22px}
+.foot .callrow{display:flex;align-items:center;flex-wrap:wrap;gap:20px clamp(24px,3.2vw,56px);position:relative;z-index:2}
+.foot .callrow .big{font-size:clamp(34px,4.8vw,84px)}
+.foot .callrow .btn{flex:none}
+@media(max-width:1000px){.foot .callrow .big{font-size:clamp(34px,6.6vw,104px)}}
 .foot .xh{position:absolute;right:var(--gx);top:34px;width:min(16vw,200px);aspect-ratio:1;transform:translateY(-50%);z-index:0;opacity:.13}
 .foot .xh::before,.foot .xh::after{content:'';position:absolute;background:var(--dkl)}
 .foot .xh::before{left:-100vw;right:-100vw;top:50%;height:1px}.foot .xh::after{top:-100vh;bottom:-100vh;left:50%;width:1px}

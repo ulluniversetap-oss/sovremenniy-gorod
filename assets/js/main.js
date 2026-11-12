@@ -120,6 +120,7 @@ var PH={"geroi": "geroi", "novy": "novy", "semeyny": "semeyny", "severny": "seve
   if(leadBtn){
     leadBtn.addEventListener('click',openLead);
     if(leadBtnMenu)leadBtnMenu.addEventListener('click',function(){closeMenu();openLead()});
+    var leadBtnFoot=document.getElementById('leadBtnFoot');if(leadBtnFoot)leadBtnFoot.addEventListener('click',openLead);
     leadScrim.addEventListener('click',closeLead);
     leadClose.addEventListener('click',closeLead);
     leadOkClose.addEventListener('click',closeLead);
