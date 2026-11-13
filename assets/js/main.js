@@ -233,8 +233,24 @@ var PH={"geroi": "geroi", "novy": "novy", "semeyny": "semeyny", "severny": "seve
       if(d===dir)return;dir=d;
       gsap.to(cont,{y:d<0?-90:0,duration:.28,ease:'power2.out',overwrite:'auto'});
     }
-    var tl=gsap.timeline({scrollTrigger:{trigger:cont,pin:sec,start:'bottom bottom',end:function(){return '+='+Math.round(cont.getBoundingClientRect().height*9.45)},scrub:.5,fastScrollEnd:true,anticipatePin:1,invalidateOnRefresh:true,onUpdate:function(self){applyDir(self.direction)}}});
+    /* высота экрана при раскрытой панели Safari (самая маленькая): блок должен целиком в неё помещаться,
+       иначе карточки уезжают под панель. Подгоняем высоту фото дома и привязываем старт пина к этой высоте */
+    var svh=document.createElement('div');
+    svh.style.cssText='position:fixed;left:0;top:0;width:0;height:100svh;visibility:hidden;pointer-events:none';
+    document.body.appendChild(svh);
+    function smallH(){return Math.round(svh.getBoundingClientRect().height)||innerHeight}
+    var hi=sec.querySelector('.house .hi');
+    function fit(){
+      if(!hi)return;
+      hi.style.aspectRatio='';hi.style.height='';
+      var over=sec.getBoundingClientRect().height-smallH();
+      if(over>0){var nh=Math.max(150,Math.round(hi.getBoundingClientRect().height-over));hi.style.aspectRatio='auto';hi.style.height=nh+'px'}
+    }
+    fit();
+    ScrollTrigger.addEventListener('refreshInit',fit);
+    var tl=gsap.timeline({scrollTrigger:{trigger:cont,pin:sec,start:function(){return 'bottom '+smallH()+'px'},end:function(){return '+='+Math.round(cont.getBoundingClientRect().height*9.45)},scrub:.5,fastScrollEnd:true,anticipatePin:1,invalidateOnRefresh:true,onUpdate:function(self){applyDir(self.direction)}}});
     for(var i=1;i<pl.length;i++){tl.to(pl[i],{xPercent:0,ease:'none'})}
+    return function(){ScrollTrigger.removeEventListener('refreshInit',fit);if(hi){hi.style.aspectRatio='';hi.style.height=''}svh.remove()};
   });
 
   /* ---------- сборка дома ---------- */
