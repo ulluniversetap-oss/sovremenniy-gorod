@@ -394,7 +394,7 @@ h2.display,h3{text-wrap:balance}
 .ev:hover .ev-ar{background:var(--ink);color:var(--bg)}
 .ev:hover .ev-ar svg{transform:rotate(45deg)}
 
-@media(max-width:700px){.events .hd{flex-wrap:wrap;align-items:flex-start;gap:20px}}
+@media(max-width:700px){.events .hd{flex-direction:column;flex-wrap:wrap;align-items:center;justify-content:center;text-align:center;gap:20px}}
 
 /* ---------- куда обращаться ---------- */
 .route{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;margin-top:clamp(32px,3.6vw,52px);padding-top:26px;border-top:1px solid var(--dkl);position:relative;z-index:2}
