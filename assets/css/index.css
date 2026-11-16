@@ -225,12 +225,14 @@ header.top::before{content:'';position:absolute;left:0;right:0;top:0;bottom:0;ba
 .asm-dots{display:none}
 .asm.dark{--ink:var(--dki);--mut:var(--dkm);--line:var(--dkl);--bg:var(--dk)}
 @media(max-width:900px){
-  .asm.static .cards{position:relative;display:grid;grid-template-columns:100%;grid-template-rows:auto;gap:0;overflow:hidden;width:100%;align-self:stretch}
-  .asm.static .cd{position:relative;grid-area:1/1;align-self:stretch;width:100%;height:auto;min-height:0;will-change:transform}
-  /* блок закрепляется целиком на весь экран: без чужого фона сверху и с воздухом под карточками
-     (нижний отступ учитывает панель Safari: разница между большой и малой высотой экрана) */
-  section.asm.static .asm-pin{min-height:100vh;min-height:100lvh;justify-content:center;padding-top:104px;padding-bottom:40px;padding-bottom:calc(100lvh - 100svh + 32px)}
-  section.asm.static h2{margin-bottom:28px}
+  /* ручной слайдер карточек */
+  .asm.static .cards{position:relative;display:flex;align-items:stretch;gap:12px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;scrollbar-width:none;width:auto;align-self:stretch;margin:0 calc(var(--gx)*-1);padding:0 var(--gx);scroll-padding:0 var(--gx)}
+  .asm.static .cards::-webkit-scrollbar{display:none}
+  .asm.static .cd{position:relative;flex:0 0 86%;width:auto;height:auto;min-height:0;scroll-snap-align:start;transform:none}
+  section.asm.static .asm-pin{padding-bottom:clamp(56px,9vh,96px)}
+  .asm-sl-dots{display:flex;justify-content:center;gap:6px;margin-top:16px}
+  .asm-sl-dots i{width:6px;height:6px;border-radius:50%;background:var(--dkl);transition:background .3s,transform .3s}
+  .asm-sl-dots i.on{background:var(--dki);transform:scale(1.35)}
 }
 
 .stack{position:relative;width:min(36vw,430px);aspect-ratio:1;transform-style:preserve-3d;transform:rotateX(63deg) rotateZ(-47deg)}

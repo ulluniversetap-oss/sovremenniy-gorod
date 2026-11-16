@@ -285,20 +285,22 @@ var PH={"geroi": "geroi", "novy": "novy", "semeyny": "semeyny", "severny": "seve
   });
   mm.add('(max-width:900px)',function(){asm.classList.add('static')});
 
-  /* мобилка/планшет: карточки сборки дома по очереди наезжают справа налево поверх друг друга,
-     заголовок остаётся на месте — тот же приём, что и в блоке «ПРИНЦИП» */
+  /* мобилка/планшет: обычный ручной слайдер карточек (свайп), без закрепления и анимаций */
   mm.add('(max-width:900px)',function(){
-    var cardsWrap=$('#cards'),asmH2=asm.querySelector('h2');
+    var cardsWrap=$('#cards');
     if(!cardsWrap||cds.length<2)return;
-    var maxH=0;
-    cds.forEach(function(c){maxH=Math.max(maxH,c.getBoundingClientRect().height)});
-    cardsWrap.style.height=Math.ceil(maxH)+'px';
-    if(reduce){gsap.set(cds,{xPercent:0});return function(){cardsWrap.style.height='';gsap.set(cds,{clearProps:'all'})}}
-    gsap.set(cds.slice(1),{xPercent:100});
-    /* закрепляем секцию целиком от верха экрана: она занимает весь экран (CSS), карточки с запасом над панелью Safari */
-    var tl=gsap.timeline({scrollTrigger:{trigger:'#asm',pin:'#asm',start:'top top',end:function(){return '+='+Math.round(innerHeight*.62*(cds.length-1))},scrub:.5,fastScrollEnd:true,anticipatePin:1,invalidateOnRefresh:true}});
-    for(var i=1;i<cds.length;i++){tl.to(cds[i],{xPercent:0,ease:'none'})}
-    return function(){tl.kill();cardsWrap.style.height='';gsap.set(cds,{clearProps:'all'})};
+    var dots=document.createElement('div');dots.className='asm-sl-dots';dots.setAttribute('aria-hidden','true');
+    dots.innerHTML=cds.map(function(){return '<i></i>'}).join('');
+    cardsWrap.parentNode.insertBefore(dots,cardsWrap.nextSibling);
+    var di=dots.children;
+    function sync(){
+      var c=cardsWrap.scrollLeft+cardsWrap.clientWidth/2,idx=0,best=1e9;
+      cds.forEach(function(el,k){var m=el.offsetLeft+el.offsetWidth/2,d=Math.abs(m-c);if(d<best){best=d;idx=k}});
+      for(var k=0;k<di.length;k++)di[k].classList.toggle('on',k===idx);
+    }
+    cardsWrap.addEventListener('scroll',sync,{passive:true});
+    sync();
+    return function(){cardsWrap.removeEventListener('scroll',sync);dots.remove()};
   });
 
   /* ---------- 5/6 ---------- */
