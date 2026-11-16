@@ -233,7 +233,7 @@ var PH={"geroi": "geroi", "novy": "novy", "semeyny": "semeyny", "severny": "seve
       if(d===dir)return;dir=d;
       gsap.to(cont,{y:d<0?-90:0,duration:.28,ease:'power2.out',overwrite:'auto'});
     }
-    var tl=gsap.timeline({scrollTrigger:{trigger:cont,pin:sec,start:'bottom bottom',end:function(){return '+='+Math.round(cont.getBoundingClientRect().height*9.45)},scrub:.5,fastScrollEnd:true,anticipatePin:1,invalidateOnRefresh:true,onUpdate:function(self){applyDir(self.direction)}}});
+    var tl=gsap.timeline({scrollTrigger:{trigger:cont,pin:sec,start:'bottom bottom',end:function(){return '+='+Math.round(cont.getBoundingClientRect().height*12)},scrub:.5,fastScrollEnd:true,anticipatePin:1,invalidateOnRefresh:true,onUpdate:function(self){applyDir(self.direction)}}});
     for(var i=1;i<pl.length;i++){tl.to(pl[i],{xPercent:0,ease:'none'})}
   });
 
