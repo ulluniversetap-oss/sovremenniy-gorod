@@ -206,8 +206,7 @@ var PH={"geroi": "geroi", "novy": "novy", "semeyny": "semeyny", "severny": "seve
     if(reduce){gsap.set(pl,{y:0});if(stairEl)gsap.set(stairEl,{paddingBottom:0,'--pb':'0px'});return}
     var dl=Math.min(80,Math.max(30,innerWidth*0.05));
     gsap.fromTo(pl,{y:function(i){return i*dl}},{y:0,ease:'none',scrollTrigger:{trigger:'.stair',start:'top 98%',end:'top 28%',scrub:.6}});
-    /* контейнер «сдувается» синхронно с карточками, чтобы следующая секция не наезжала на анимацию и не оставался пустой хвост */
-    if(stairEl)gsap.fromTo(stairEl,{paddingBottom:dl*3,'--pb':dl*3+'px'},{paddingBottom:0,'--pb':'0px',ease:'none',scrollTrigger:{trigger:'.stair',start:'top 98%',end:'top 28%',scrub:.6}});
+    /* высоту блока не анимируем: изменение высоты над закреплённым блоком «Отвечаем за дом» сбивало его расчёт (рывки, пустота при скролле вверх) */
   });
 
   /* мобилка: держим заголовок/дом на экране, под ними карточки по очереди наезжают справа налево */
