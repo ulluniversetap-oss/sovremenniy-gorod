@@ -295,20 +295,8 @@ var PH={"geroi": "geroi", "novy": "novy", "semeyny": "semeyny", "severny": "seve
     cardsWrap.style.height=Math.ceil(maxH)+'px';
     if(reduce){gsap.set(cds,{xPercent:0});return function(){cardsWrap.style.height='';gsap.set(cds,{clearProps:'all'})}}
     gsap.set(cds.slice(1),{xPercent:100});
-    /* подъём карточек при скролле вверх ограничен реальным зазором до заголовка,
-       чтобы карточки не наезжали на «Отвечаем за дом целиком» (в отличие от блока
-       «ПРИНЦИП», где над плашками есть фото — тут зазор намного меньше) */
-    var liftAmt=90;
-    if(asmH2){
-      var gapAvail=cardsWrap.getBoundingClientRect().top-asmH2.getBoundingClientRect().bottom;
-      liftAmt=Math.max(0,Math.min(90,gapAvail-6));
-    }
-    var dir=0;
-    function applyDir(d){
-      if(d===dir)return;dir=d;
-      gsap.to(cardsWrap,{y:d<0?-liftAmt:0,duration:.28,ease:'power2.out',overwrite:'auto'});
-    }
-    var tl=gsap.timeline({scrollTrigger:{trigger:cardsWrap,pin:'#asm',start:'bottom bottom',end:function(){return '+='+Math.round(innerHeight*.62*(cds.length-1))},scrub:.5,fastScrollEnd:true,anticipatePin:1,invalidateOnRefresh:true,onUpdate:function(self){applyDir(self.direction)}}});
+    /* закрепляем секцию целиком от верха экрана: она занимает весь экран (CSS), карточки с запасом над панелью Safari */
+    var tl=gsap.timeline({scrollTrigger:{trigger:'#asm',pin:'#asm',start:'top top',end:function(){return '+='+Math.round(innerHeight*.62*(cds.length-1))},scrub:.5,fastScrollEnd:true,anticipatePin:1,invalidateOnRefresh:true}});
     for(var i=1;i<cds.length;i++){tl.to(cds[i],{xPercent:0,ease:'none'})}
     return function(){tl.kill();cardsWrap.style.height='';gsap.set(cds,{clearProps:'all'})};
   });

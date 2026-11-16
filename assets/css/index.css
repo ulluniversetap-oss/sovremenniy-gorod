@@ -227,6 +227,10 @@ header.top::before{content:'';position:absolute;left:0;right:0;top:0;bottom:0;ba
 @media(max-width:900px){
   .asm.static .cards{position:relative;display:grid;grid-template-columns:100%;grid-template-rows:auto;gap:0;overflow:hidden;width:100%;align-self:stretch}
   .asm.static .cd{position:relative;grid-area:1/1;align-self:stretch;width:100%;height:auto;min-height:0;will-change:transform}
+  /* блок закрепляется целиком на весь экран: без чужого фона сверху и с воздухом под карточками
+     (нижний отступ учитывает панель Safari: разница между большой и малой высотой экрана) */
+  section.asm.static .asm-pin{min-height:100vh;min-height:100lvh;justify-content:center;padding-top:104px;padding-bottom:40px;padding-bottom:calc(100lvh - 100svh + 32px)}
+  section.asm.static h2{margin-bottom:28px}
 }
 
 .stack{position:relative;width:min(36vw,430px);aspect-ratio:1;transform-style:preserve-3d;transform:rotateX(63deg) rotateZ(-47deg)}
